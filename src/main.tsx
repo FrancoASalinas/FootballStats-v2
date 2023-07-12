@@ -10,16 +10,24 @@ import {
 import Welcome from './pages/Welcome.tsx';
 import Home from './pages/Home.tsx';
 import App from './pages/App.tsx';
-import Players from './pages/Players.tsx';
-import Teams from './pages/Teams.tsx';
+import Competitions from './pages/Competitions.tsx';
+import Countries from './pages/Countries.tsx';
+import CountryTeams from './pages/CountryTeams.tsx';
+import { countryLoader } from './utils/loaders.ts';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route element={<App />} path="/">
         <Route element={<Home />} index />
-        <Route element={<Players />} path="players" />
-        <Route element={<Teams />} path="teams" />
+        <Route element={<Competitions />} path="competitions" />
+        <Route element={<Countries />} path="countries" />
+        <Route
+          element={<CountryTeams />}
+          path=":countryName"
+          loader={countryLoader}
+        />
+        <Route />
       </Route>
       <Route element={<Welcome />} path="/welcome" />
     </>

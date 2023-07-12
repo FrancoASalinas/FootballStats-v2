@@ -11,7 +11,9 @@ function App() {
   return (
     <>
       <header className="flex p-5 text-xl justify-between relative bg-primary">
-        <button>Football Stats</button>
+        <button>
+          <Link to="/">Football Stats</Link>
+        </button>
         <button onClick={handleNav}>
           <i className="fa-solid fa-bars"></i>
         </button>
@@ -21,16 +23,22 @@ function App() {
           }`}
         >
           <ul>
-            <li onClick={handleNav}>
-              <Link to="players">Players</Link>
+            <li className="p-3">
+              <Link to="competitions" onClick={handleNav}>
+                Competitions
+              </Link>
             </li>
-            <li onClick={handleNav}>
-              <Link to="teams">Teams</Link>
+            <li className="p-3">
+              <Link to="countries" onClick={handleNav}>
+                Teams
+              </Link>
             </li>
           </ul>
           <ul>
-            <li>Install the App</li>
             <li>
+              <button className="p-3">Install the App</button>
+            </li>
+            <li className="p-3">
               <i className="fa-solid fa-moon"></i>
               <input type="checkbox" />
               <i className="fa-solid fa-sun"></i>
@@ -38,7 +46,7 @@ function App() {
           </ul>
         </nav>
       </header>
-      <main className="min-h-screen bg-dark">
+      <main className="bg-dark">
         <Outlet />
       </main>
     </>
