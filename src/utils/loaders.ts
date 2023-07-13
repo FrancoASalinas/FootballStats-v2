@@ -12,3 +12,17 @@ export const countryLoader = async ({params}: any) => {
 
 return data.json()
 }
+
+export const teamLoader = async ({params}: any) => {
+    const {teamId} = params;
+
+    const data = await fetch(`https://v3.football.api-sports.io/teams?id=${teamId}`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": "v3.football.api-sports.io",
+            "x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
+        }
+    })
+
+    return data.json()
+}

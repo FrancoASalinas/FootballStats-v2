@@ -13,7 +13,9 @@ import App from './pages/App.tsx';
 import Competitions from './pages/Competitions.tsx';
 import Countries from './pages/Countries.tsx';
 import CountryTeams from './pages/CountryTeams.tsx';
-import { countryLoader } from './utils/loaders.ts';
+import { countryLoader, teamLoader } from './utils/loaders.ts';
+import Team from './pages/Team.tsx';
+import TeamLayout from './pages/TeamLayout.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,7 +29,9 @@ const router = createBrowserRouter(
           path=":countryName"
           loader={countryLoader}
         />
-        <Route />
+        <Route element={<TeamLayout />} path="team">
+          <Route element={<Team />} path=":teamId" loader={teamLoader} />
+        </Route>
       </Route>
       <Route element={<Welcome />} path="/welcome" />
     </>
