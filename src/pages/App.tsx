@@ -1,36 +1,24 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../modules/Header';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function App() {
-  // const [darkTheme, setDarkTheme] = useState<boolean | undefined>();
+  const [darkTheme, setDarkTheme] = useState(false);
 
-  // function handleTheme() {
-  //   if(darkTheme !== undefined)
-  //   {setDarkTheme((prev) => !prev)}
-  //   else{
-  //     setDarkTheme(true)
-  //   }
-  // }
+  function toggleTheme() {
+    setDarkTheme((prev) => !prev);
+  }
 
-  // useEffect(() => {
-  //    if (darkTheme === true ||
-  //     localStorage.theme === 'dark' ||
-  //     (!('theme' in localStorage) &&
-  //       window.matchMedia('(prefers-color-scheme: dark)').matches)
-  //   ) {
-  //     document.documentElement.classList.add('dark');
-  //     setDarkTheme(true)
-  //   } else {
-  //     document.documentElement.classList.remove('dark');
-  //     setDarkTheme(false)
-  //   }
-  // });
+  console.log(window.localStorage);
+
+  console.log(document.documentElement);
+
+  console.log(darkTheme);
 
   return (
     <>
-      <Header />
-      <main className="bg-dark mt-20">
+      <Header onChange={toggleTheme} darkTheme={darkTheme} />
+      <main className="bg-light font-roboto mt-20 min-h-screen">
         <Outlet />
       </main>
     </>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Header() {
+function Header({ onChange, darkTheme }: any) {
   const [nav, setNav] = useState(false);
 
   function handleNav() {
@@ -40,7 +40,12 @@ function Header() {
           </li>
           <li className="p-3">
             <label className="relative inline-block w-[60px] h-[34px]">
-              <input type="checkbox" className="opacity-0 w-0 h-0 peer" />
+              <input
+                type="checkbox"
+                className="opacity-0 w-0 h-0 peer"
+                onChange={onChange}
+                checked={darkTheme}
+              />
               <i className="fa-solid fa-moon absolute top-1/2 -translate-y-1/2 left-1 z-10 opacity-0 peer-checked:opacity-100 duration-[.2s] text-light"></i>
               <span className="absolute cursor-pointer peer-checked:bg-dark top-0 left-0 right-0 bottom-0 bg-light duration-[.2s] rounded-full before:absolute before:h-[26px] before:w-[26px] before:left-[4px] before:bottom-[4px] before:bg-primary before:duration-[.2s] peer-checked:before:translate-x-full before:rounded-full"></span>
               <i className="fa-solid fa-sun absolute top-1/2 -translate-y-1/2 right-1 z-10 opacity-100 peer-checked:opacity-0 duration-[.2s] text-dark "></i>
@@ -65,7 +70,12 @@ function Header() {
           </li>
           <li className="p-3">
             <label className="relative inline-block w-[60px] h-[34px]">
-              <input type="checkbox" className="opacity-0 w-0 h-0 peer" />
+              <input
+                type="checkbox"
+                className="opacity-0 w-0 h-0 peer"
+                onChange={onChange}
+                checked={darkTheme}
+              />
               <i className="fa-solid fa-moon absolute top-1/2 -translate-y-1/2 left-1 z-10 opacity-0 peer-checked:opacity-100 duration-[.2s] text-light"></i>
               <span className="absolute cursor-pointer peer-checked:bg-dark top-0 left-0 right-0 bottom-0 bg-light duration-[.2s] rounded-full before:absolute before:h-[26px] before:w-[26px] before:left-[4px] before:bottom-[4px] before:bg-primary before:duration-[.2s] peer-checked:before:translate-x-full before:rounded-full"></span>
               <i className="fa-solid fa-sun absolute top-1/2 -translate-y-1/2 right-1 z-10 opacity-100 peer-checked:opacity-0 duration-[.2s] text-dark "></i>
