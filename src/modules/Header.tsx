@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function Header({ onChange, darkTheme }: any) {
+function Header({
+  onChange,
+  darkTheme,
+}: {
+  onChange: VoidFunction;
+  darkTheme: boolean;
+}) {
   const [nav, setNav] = useState(false);
 
   function handleNav() {

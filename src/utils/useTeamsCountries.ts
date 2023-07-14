@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 
 export default function useTeamsCountries() {
-  const [countries, setTeamsCountries] = useState<any>([]);
+  const [countries, setTeamsCountries]: [countries: [], setTeamsCountries: any] = useState([]);
 
   useEffect(() => {
     var myHeaders = new Headers();

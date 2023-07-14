@@ -9,12 +9,6 @@ function App() {
     setDarkTheme((prev) => !prev);
   }
 
-  console.log(window.localStorage);
-
-  console.log(document.documentElement);
-
-  console.log(darkTheme);
-
   return (
     <>
       <Header onChange={toggleTheme} darkTheme={darkTheme} />

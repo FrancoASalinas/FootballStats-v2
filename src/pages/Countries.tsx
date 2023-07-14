@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import useTeamsCountries from '../utils/useTeamsCountries.ts';
 
 function Teams() {
-  const countries: [] = useTeamsCountries();
+  const countries = useTeamsCountries();
 
   let letter = '';
 
@@ -10,9 +10,9 @@ function Teams() {
     <>
       <article className="p-5 ">
         <h2 className="text-3xl">Countries</h2>
-        <div className="sm:grid grid-cols-2 block">
+        <div className="sm:grid grid-cols-2 ">
           {countries.length !== 0 &&
-            countries.map((country: any) => {
+            countries.map((country: { name: string }) => {
               if (country.name[0] === letter) return null;
               else {
                 letter = country.name[0];
@@ -23,10 +23,10 @@ function Teams() {
                     </h3>
                     <ul key={letter + letter}>
                       {countries
-                        .filter((c: any) => c.name[0] === letter)
-                        .map((item: any) => (
+                        .filter((c: { name: string }) => c.name[0] === letter)
+                        .map((item: { name: string }) => (
                           <li key={item.name}>
-                            <Link to={`/team/${item.name}`}>{item.name}</Link>
+                            <Link to={`/${item.name}`}>{item.name}</Link>
                           </li>
                         ))}
                     </ul>
