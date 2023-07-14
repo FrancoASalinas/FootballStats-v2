@@ -6,14 +6,23 @@ function Teams() {
 
   let letter = '';
 
+  const sortedData = countries.slice(0).sort((a: any, b: any) => {
+    if (a.name > b.name) {
+      return +1;
+    } else if (a.name < b.name) {
+      return -1;
+    } else return 0;
+  });
+
   return (
     <>
       <article className="p-5 ">
         <h2 className="text-3xl">Countries</h2>
         <div className="sm:grid grid-cols-2 ">
-          {countries.length !== 0 &&
-            countries.map((country: { name: string }) => {
-              if (country.name[0] === letter) return null;
+          {sortedData.length !== 0 &&
+            sortedData.map((country: { name: string }) => {
+              if (country.name[0] === letter || !country.name[0].match(/[A-Z]/))
+                return null;
               else {
                 letter = country.name[0];
                 return (
@@ -22,7 +31,7 @@ function Teams() {
                       {letter}
                     </h3>
                     <ul key={letter + letter}>
-                      {countries
+                      {sortedData
                         .filter((c: { name: string }) => c.name[0] === letter)
                         .map((item: { name: string }) => (
                           <li key={item.name}>
