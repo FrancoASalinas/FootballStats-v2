@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Header onChange={toggleTheme} darkTheme={darkTheme} />
-      <main className="bg-light font-roboto mt-20 min-h-screen">
+      <main className="bg-light font-roboto mt-20 p-5 min-h-screen">
         <Outlet />
       </main>
     </>

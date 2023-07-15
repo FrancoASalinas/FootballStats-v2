@@ -7,7 +7,7 @@ function Home() {
 
   return (
     <>
-      <div className="p-5 grid grid-cols-1 sm:grid-cols-[65%_35%]">
+      <div className="grid grid-cols-1 sm:grid-cols-[65%_35%]">
         <article className="my-5 w-full">
           <h2 className="text-3xl">Your favorite Topics</h2>
           <ul>

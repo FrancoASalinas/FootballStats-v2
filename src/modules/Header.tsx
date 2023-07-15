@@ -34,11 +34,6 @@ function Header({
               Competitions
             </Link>
           </li>
-          <li className="p-3">
-            <Link to="countries" onClick={handleNav}>
-              Teams
-            </Link>
-          </li>
         </ul>
         <ul>
           <li>
@@ -64,11 +59,6 @@ function Header({
           <li className="p-3">
             <Link to="competitions" onClick={handleNav}>
               Competitions
-            </Link>
-          </li>
-          <li className="p-3">
-            <Link to="countries" onClick={handleNav}>
-              Teams
             </Link>
           </li>
           <li>
