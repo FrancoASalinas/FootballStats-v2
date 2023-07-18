@@ -4,7 +4,7 @@ function Competition() {
   const { availableSeasons, currentSeasonStandings }: any = useLoaderData();
   const navigate = useNavigate();
 
-  console.log(currentSeasonStandings.response[0]);
+  console.log(currentSeasonStandings);
 
   return (
     <div>
@@ -23,6 +23,7 @@ function Competition() {
       <label>
         Season{' '}
         <select
+          className="my-5"
           defaultValue={currentSeasonStandings.parameters.season}
           onChange={(e) =>
             navigate(
@@ -36,20 +37,75 @@ function Competition() {
         </select>
       </label>
       <article>
-        <ul>
-          {currentSeasonStandings.response.length > 0 &&
-            currentSeasonStandings.response[0].league.standings[0].map(
-              (position: {
-                rank: number;
-                team: { name: string; id: number };
-                points: number;
-              }) => (
-                <li key={position.team.id}>
-                  {position.rank} {position.team.name} {position.points}
-                </li>
-              )
-            )}
-        </ul>
+        {currentSeasonStandings.response.length > 0 &&
+          currentSeasonStandings.response[0].league.standings.map(
+            (
+              item: [
+                {
+                  group: string;
+                  rank: number;
+                  team: { name: string };
+                  all: {
+                    played: number;
+                    goals: { for: number; against: number };
+                  };
+                  goalsDiff: number;
+                  points: number;
+                }
+              ]
+            ) => (
+              <table className="w-full text-center border mb-10 border-dark">
+                <caption>{item[0].group}</caption>
+                <thead className="overflow-x-scroll">
+                  <tr>
+                    <th className="border border-dark">Rank</th>
+                    <th className="border border-dark">Team</th>
+                    <th className="border border-dark">P</th>
+                    <th className="border border-dark">GF</th>
+                    <th className="border border-dark">GA</th>
+                    <th className="border border-dark">GD</th>
+                    <th className="border border-dark">Points</th>
+                  </tr>
+                </thead>
+                <tbody className="overflow-x-scroll">
+                  {item.map(
+                    (standing: {
+                      rank: number;
+                      team: { name: string };
+                      all: {
+                        played: number;
+                        goals: { for: number; against: number };
+                      };
+                      goalsDiff: number;
+                      points: number;
+                    }) => (
+                      <tr>
+                        <td className="border border-dark">{standing.rank}</td>
+                        <td className="border border-dark">
+                          {standing.team.name}
+                        </td>
+                        <td className="border border-dark">
+                          {standing.all.played}
+                        </td>
+                        <td className="border border-dark">
+                          {standing.all.goals.for}
+                        </td>
+                        <td className="border border-dark">
+                          {standing.all.goals.against}
+                        </td>
+                        <td className="border border-dark">
+                          {standing.goalsDiff}
+                        </td>
+                        <td className="border border-dark">
+                          {standing.points}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            )
+          )}
       </article>
     </div>
   );
