@@ -9,7 +9,7 @@ export default function useTeamsCountries() {
     myHeaders.append('x-rapidapi-key', '1a3508246c26e132ec89913136f83975');
     myHeaders.append('x-rapidapi-host', 'v3.football.api-sports.io');
 
-    fetch('https://v3.football.api-sports.io/teams/countries', {
+    fetch('https://v3.football.api-sports.io/countries', {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow',

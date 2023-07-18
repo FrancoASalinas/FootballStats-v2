@@ -3,32 +3,46 @@ import { useLoaderData } from 'react-router-dom';
 function Competition() {
   const { availableSeasons, currentSeasonStandings }: any = useLoaderData();
 
+
   console.log(availableSeasons, currentSeasonStandings);
 
   return (
     <div>
-      <h1 className="text-3xl ">{availableSeasons.response[0].league.name}</h1>
-      <img
-        className="w-20"
-        src={availableSeasons.response[0].league.logo}
-      ></img>
+      <div className="flex justify-between">
+        <h1 className="text-3xl ">
+          {availableSeasons.response[0].league.name}
+        </h1>
+        <img
+          className="w-20"
+          src={availableSeasons.response[0].league.logo}
+        ></img>
+      </div>
       <nav>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
+        <ul></ul>
       </nav>
       <label>
         Season{' '}
-        <select>
+        <select defaultValue={currentSeasonStandings.parameters.season}>
           {availableSeasons.response[0].seasons.map((season: any) => (
             <option key={season.year}>{season.year}</option>
           ))}
         </select>
       </label>
       <article>
-        <ul>{/* Team standings for selected season */}</ul>
+        <ul>
+          {currentSeasonStandings.response.length > 0 &&
+            currentSeasonStandings.response[0].league.standings[0].map(
+              (position: {
+                rank: number;
+                team: { name: string; id: number };
+                points: number;
+              }) => (
+                <li key={position.team.id}>
+                  {position.rank} {position.team.name} {position.points}
+                </li>
+              )
+            )}
+        </ul>
       </article>
     </div>
   );
