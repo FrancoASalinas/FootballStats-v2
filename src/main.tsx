@@ -33,6 +33,11 @@ const router = createBrowserRouter(
             path="comps/:compId"
             loader={compLoader}
           />
+          <Route
+            element={<Competition />}
+            path="comps/:compId/:compSeason"
+            loader={compLoader}
+          />
         </Route>
       </Route>
       <Route element={<Welcome />} path="/welcome" />

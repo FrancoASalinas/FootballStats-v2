@@ -1,10 +1,10 @@
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
 function Competition() {
   const { availableSeasons, currentSeasonStandings }: any = useLoaderData();
+  const navigate = useNavigate();
 
-
-  console.log(availableSeasons, currentSeasonStandings);
+  console.log(currentSeasonStandings.response[0]);
 
   return (
     <div>
@@ -22,7 +22,14 @@ function Competition() {
       </nav>
       <label>
         Season{' '}
-        <select defaultValue={currentSeasonStandings.parameters.season}>
+        <select
+          defaultValue={currentSeasonStandings.parameters.season}
+          onChange={(e) =>
+            navigate(
+              `/competitions/comps/${availableSeasons.response[0].league.id}/${e.target.value}`
+            )
+          }
+        >
           {availableSeasons.response[0].seasons.map((season: any) => (
             <option key={season.year}>{season.year}</option>
           ))}

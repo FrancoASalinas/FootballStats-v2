@@ -3,8 +3,6 @@ import { Link, useLoaderData } from 'react-router-dom';
 function CountryCompetitions() {
   const data: any = useLoaderData();
 
-  console.log(data.response);
-
   return (
     <>
       <h2 className="text-2xl py-2">
