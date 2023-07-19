@@ -1,7 +1,16 @@
 import { Link, useLoaderData } from 'react-router-dom';
 
+interface Data {
+  response: [
+    {
+      country: { name: string; id: number };
+      league: { id: number; name: string };
+    }
+  ];
+}
+
 function CountryCompetitions() {
-  const data: any = useLoaderData();
+  const data: Data = useLoaderData() as Data;
 
   return (
     <>
@@ -10,7 +19,7 @@ function CountryCompetitions() {
       </h2>
       <ul className="sm:grid grid-cols-2 ">
         {data.response.length > 0 &&
-          data.response.map((item: any) => (
+          data.response.map((item) => (
             <li>
               <Link to={`../comps/${item.league.id}`}>{item.league.name}</Link>
             </li>

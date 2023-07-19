@@ -35,7 +35,7 @@ export const compLoader = async ({params}: any) => {
             }
         }).then(response => response.json())
     } else{
-        currentSeasonStandings = await fetch(`https://v3.football.api-sports.io/standings?league=${compId}&season=${availableSeasons.response[0].seasons.filter((season: any) => season.current === true)[0].year}`, {
+        currentSeasonStandings = await fetch(`https://v3.football.api-sports.io/standings?league=${compId}&season=${availableSeasons.response[0].seasons.filter((season: {current: boolean}) => season.current === true)[0].year}`, {
             "method": "GET",
             "headers": {
                 "x-rapidapi-host": "v3.football.api-sports.io",

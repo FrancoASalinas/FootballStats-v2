@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import useTeamsCountries from '../utils/useTeamsCountries.ts';
 
+interface Country {
+  name: string;
+}
+
 function Countries() {
   const countries = useTeamsCountries();
 
   let letter = '';
 
-  const sortedData = countries.slice(0).sort((a: any, b: any) => {
+  const sortedData = countries.slice(0).sort((a: Country, b: Country) => {
     if (a.name > b.name) {
       return +1;
     } else if (a.name < b.name) {

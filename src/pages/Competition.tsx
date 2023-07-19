@@ -1,7 +1,34 @@
 import { useLoaderData, useNavigate } from 'react-router-dom';
 
+interface Data {
+  availableSeasons: {
+    response: [
+      {
+        league: { name: string; logo: string; id: number };
+        seasons: [];
+      }
+    ];
+  };
+  currentSeasonStandings: {
+    parameters: { season: number };
+    response: [{ league: { standings: [] } }];
+  };
+}
+
+interface Standing {
+  rank: number;
+  team: { name: string };
+  all: {
+    played: number;
+    goals: { for: number; against: number };
+  };
+  goalsDiff: number;
+  points: number;
+}
+
 function Competition() {
-  const { availableSeasons, currentSeasonStandings }: any = useLoaderData();
+  const { availableSeasons, currentSeasonStandings }: Data =
+    useLoaderData() as Data;
   const navigate = useNavigate();
 
   console.log(currentSeasonStandings);
@@ -31,9 +58,11 @@ function Competition() {
             )
           }
         >
-          {availableSeasons.response[0].seasons.map((season: any) => (
-            <option key={season.year}>{season.year}</option>
-          ))}
+          {availableSeasons.response[0].seasons.map(
+            (season: { year: number }) => (
+              <option key={season.year}>{season.year}</option>
+            )
+          )}
         </select>
       </label>
       <article>
@@ -68,40 +97,27 @@ function Competition() {
                   </tr>
                 </thead>
                 <tbody className="overflow-x-scroll">
-                  {item.map(
-                    (standing: {
-                      rank: number;
-                      team: { name: string };
-                      all: {
-                        played: number;
-                        goals: { for: number; against: number };
-                      };
-                      goalsDiff: number;
-                      points: number;
-                    }) => (
-                      <tr>
-                        <td className="border border-dark">{standing.rank}</td>
-                        <td className="border border-dark">
-                          {standing.team.name}
-                        </td>
-                        <td className="border border-dark">
-                          {standing.all.played}
-                        </td>
-                        <td className="border border-dark">
-                          {standing.all.goals.for}
-                        </td>
-                        <td className="border border-dark">
-                          {standing.all.goals.against}
-                        </td>
-                        <td className="border border-dark">
-                          {standing.goalsDiff}
-                        </td>
-                        <td className="border border-dark">
-                          {standing.points}
-                        </td>
-                      </tr>
-                    )
-                  )}
+                  {item.map((standing: Standing) => (
+                    <tr>
+                      <td className="border border-dark">{standing.rank}</td>
+                      <td className="border border-dark">
+                        {standing.team.name}
+                      </td>
+                      <td className="border border-dark">
+                        {standing.all.played}
+                      </td>
+                      <td className="border border-dark">
+                        {standing.all.goals.for}
+                      </td>
+                      <td className="border border-dark">
+                        {standing.all.goals.against}
+                      </td>
+                      <td className="border border-dark">
+                        {standing.goalsDiff}
+                      </td>
+                      <td className="border border-dark">{standing.points}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             )
