@@ -46,3 +46,26 @@ export const compLoader = async ({params}: any) => {
     
         return {availableSeasons, currentSeasonStandings} 
 }
+
+export const teamLoader = async ({params}: any) => {
+
+    const {compId, teamId, season} = params;
+
+
+    const teamData = await fetch(`https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }).then(response => response.json());
+
+    const availableSeasons = await fetch(`https://v3.football.api-sports.io/teams/seasons?team=${teamId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }).then(response => response.json())
+
+    return {teamData, availableSeasons};
+    
+}

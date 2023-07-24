@@ -1,4 +1,5 @@
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import LayoutHeader from '../modules/LayoutHeader';
 
 interface Data {
   availableSeasons: {
@@ -16,8 +17,12 @@ interface Data {
 }
 
 interface Standing {
+  group: string;
   rank: number;
-  team: { name: string };
+  team: {
+    id: number;
+    name: string;
+  };
   all: {
     played: number;
     goals: { for: number; against: number };
@@ -31,19 +36,12 @@ function Competition() {
     useLoaderData() as Data;
   const navigate = useNavigate();
 
-  console.log(currentSeasonStandings);
-
   return (
-    <div>
-      <div className="flex justify-between">
-        <h1 className="text-3xl ">
-          {availableSeasons.response[0].league.name}
-        </h1>
-        <img
-          className="w-20"
-          src={availableSeasons.response[0].league.logo}
-        ></img>
-      </div>
+    <>
+      <LayoutHeader
+        name={availableSeasons.response[0].league.name}
+        src={availableSeasons.response[0].league.logo}
+      />
       <nav>
         <ul></ul>
       </nav>
@@ -68,21 +66,7 @@ function Competition() {
       <article>
         {currentSeasonStandings.response.length > 0 &&
           currentSeasonStandings.response[0].league.standings.map(
-            (
-              item: [
-                {
-                  group: string;
-                  rank: number;
-                  team: { name: string };
-                  all: {
-                    played: number;
-                    goals: { for: number; against: number };
-                  };
-                  goalsDiff: number;
-                  points: number;
-                }
-              ]
-            ) => (
+            (item: [Standing]) => (
               <table className="w-full text-center border mb-10 border-dark">
                 <caption>{item[0].group}</caption>
                 <thead className="overflow-x-scroll">
@@ -101,7 +85,12 @@ function Competition() {
                     <tr>
                       <td className="border border-dark">{standing.rank}</td>
                       <td className="border border-dark">
-                        {standing.team.name}
+                        <Link
+                          to={`/team/${availableSeasons.response[0].league.id}/${standing.team.id}/${currentSeasonStandings.parameters.season}`}
+                          className="hover:underline"
+                        >
+                          {standing.team.name}
+                        </Link>
                       </td>
                       <td className="border border-dark">
                         {standing.all.played}
@@ -123,7 +112,7 @@ function Competition() {
             )
           )}
       </article>
-    </div>
+    </>
   );
 }
 
