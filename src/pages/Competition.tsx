@@ -82,7 +82,7 @@ function Competition() {
                 </thead>
                 <tbody className="overflow-x-scroll">
                   {item.map((standing: Standing) => (
-                    <tr>
+                    <tr key={standing.team.id}>
                       <td className="border border-dark">{standing.rank}</td>
                       <td className="border border-dark">
                         <Link

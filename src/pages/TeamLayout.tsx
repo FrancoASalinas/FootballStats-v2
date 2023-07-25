@@ -1,4 +1,11 @@
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+} from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
 
 interface Data {
@@ -19,8 +26,9 @@ function TeamLayout() {
   const { teamData, availableSeasons }: Data = useLoaderData() as any;
 
   const navigate = useNavigate();
+  const location = useLocation();
 
-  console.log(teamData, availableSeasons);
+  // console.log(teamData, availableSeasons);
 
   return (
     <>
@@ -54,16 +62,21 @@ function TeamLayout() {
       <nav className="w-full h-10 my-5">
         <ul className="flex justify-between flex-wrap">
           <li className="p-2 hover:underline">
-            <button>Summary</button>
+            <Link
+              to={
+                location.pathname.split('/').length > 5
+                  ? location.pathname.split('/').slice(0, -1).join('/')
+                  : ''
+              }
+            >
+              Statistics
+            </Link>
           </li>
           <li className="p-2 hover:underline">
-            <button>Statistics</button>
+            <Link to="players">Players</Link>
           </li>
           <li className="p-2 hover:underline">
-            <button>Players</button>
-          </li>
-          <li className="p-2 hover:underline">
-            <button>Transfers</button>
+            <Link to="transfers">Transfers</Link>
           </li>
         </ul>
       </nav>
@@ -73,3 +86,7 @@ function TeamLayout() {
 }
 
 export default TeamLayout;
+
+export function useTeamData() {
+  return useOutletContext<Data>();
+}
