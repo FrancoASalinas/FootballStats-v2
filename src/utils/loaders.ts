@@ -1,50 +1,100 @@
+const store = window.localStorage
+
 export const countryLoader = async ({params}: any) => {
+
     const {countryName} = params;
 
-    const data = await fetch(`https://v3.football.api-sports.io/leagues?country=${countryName}`, {
+    if(!navigator.onLine){
+        if(store.getItem(countryName + '_comps') !== null){
+            return JSON.parse(store[countryName + '_comps'])
+        } else {
+            throw new Error('Looks like you are offline and we couldn\'t save this data')
+        }
+    } else {
+
+        
+        const data = await fetch(`https://v3.football.api-sports.io/leagues?country=${countryName}`, {
 	"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
 	}
 })
+.then(response => {
+    if(!response.ok){
+        return store.getItem(countryName + '_comps') !== null ? store.getItem(countryName + '_comps') : new Error('Error retreiving data')
+    } 
+        
+        return response.json()
+}).then(response => {
+    store.setItem(countryName + '_comps', JSON.stringify(response))
+
+    return response
+}
+)
 
 
-return data.json()
+return data
+}
 }
 
 export const compLoader = async ({params}: any) => {
+
     const {compId, compSeason} = params;
+    
+    if(!navigator.onLine){
+        if(store.getItem('availableSeasons_' + compId) !== null && store.getItem('seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')) !== null){
+            const availableSeasons = JSON.parse(store['availableSeasons_' + compId]); 
+            const currentSeasonStandings = JSON.parse(store['seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')]);
 
-    let currentSeasonStandings: any;
+            return {availableSeasons, currentSeasonStandings}
+        }
+        throw new Error('Looks like you are offline and we couldn\'t save this data');
+    } else{
+       
+        let currentSeasonStandings: any;
 
-    const  availableSeasons = await fetch(`https://v3.football.api-sports.io/leagues?id=${compId}`, {
+    const  availableSeasons: any = await fetch(`https://v3.football.api-sports.io/leagues?id=${compId}`, {
         "method": "GET",
         "headers": {
             "x-rapidapi-host": "v3.football.api-sports.io",
             "x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
         }
-    }).then(response => response.json())
+    }).then(response => {
+        if(!response.ok){
+            return store.getItem(availableSeasons) !== null ? store.getItem('availableSeasons_' + compId) : new Error('Error retreiving data')
+        } 
+            
+            return response.json()
+    }).then(response => {
+        store.setItem('availableSeasons_' + compId, JSON.stringify(response))
     
-    if(compSeason){
-          currentSeasonStandings = await fetch(`https://v3.football.api-sports.io/standings?league=${compId}&season=${compSeason}`, {
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-host": "v3.football.api-sports.io",
-                "x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
-            }
-        }).then(response => response.json())
-    } else{
-        currentSeasonStandings = await fetch(`https://v3.football.api-sports.io/standings?league=${compId}&season=${availableSeasons.response[0].seasons.filter((season: {current: boolean}) => season.current === true)[0].year}`, {
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-host": "v3.football.api-sports.io",
-                "x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
-            }
-        }).then(response => response.json())
+        return response
     }
+    )
     
-        return {availableSeasons, currentSeasonStandings} 
+          currentSeasonStandings = await fetch(
+            `${compSeason ? `https://v3.football.api-sports.io/standings?league=${compId}&season=${compSeason}` : `https://v3.football.api-sports.io/standings?league=${compId}&season=${availableSeasons.response[0].seasons.filter((season: {current: boolean}) => season.current === true)[0].year}` }`, {
+              "method": "GET",
+              "headers": {
+                  "x-rapidapi-host": "v3.football.api-sports.io",
+                  "x-rapidapi-key": '1a3508246c26e132ec89913136f83975'
+                }
+            }).then(response => {
+                if(!response.ok){
+                    return store.getItem(currentSeasonStandings) !== null ? store.getItem('seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')) : new Error('Error retreiving data')
+                } 
+                    
+                    return response.json()
+            }).then(response => {
+                store.setItem('seasonStandings_' + compId + (compSeason ? `&${compSeason}` : ''), JSON.stringify(response))
+            
+                return response
+            }
+            )
+    
+    return {availableSeasons, currentSeasonStandings} 
+    }
 }
 
 export const teamLoader = async ({params}: any) => {
