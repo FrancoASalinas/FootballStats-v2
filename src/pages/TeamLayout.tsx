@@ -7,28 +7,13 @@ import {
   useOutletContext,
 } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
-
-interface Data {
-  teamData: {
-    response: {
-      team: { name: string; logo: string };
-      league: { name: string };
-    };
-    parameters: { season: string; league: string };
-  };
-  availableSeasons: {
-    response: number[];
-    parameters: { team: string };
-  };
-}
+import { Data } from '../utils/types';
 
 function TeamLayout() {
   const { teamData, availableSeasons }: Data = useLoaderData() as any;
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  // console.log(teamData, availableSeasons);
 
   return (
     <>
@@ -80,7 +65,7 @@ function TeamLayout() {
           </li>
         </ul>
       </nav>
-      <Outlet context={teamData} />
+      <Outlet context={{ teamData }} />
     </>
   );
 }
