@@ -20,7 +20,7 @@ function CountryCompetitions() {
       <ul className="sm:grid grid-cols-2 ">
         {data.response.length > 0 &&
           data.response.map((item) => (
-            <li>
+            <li key={item.league.id}>
               <Link to={`../comps/${item.league.id}`}>{item.league.name}</Link>
             </li>
           ))}

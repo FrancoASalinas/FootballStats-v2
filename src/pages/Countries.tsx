@@ -30,11 +30,9 @@ function Countries() {
               else {
                 letter = country.name[0];
                 return (
-                  <div className="py-5 text-xl">
-                    <h3 key={letter} className="text-2xl">
-                      {letter}
-                    </h3>
-                    <ul key={letter + letter}>
+                  <div key={letter} className="py-5 text-xl">
+                    <h3 className="text-2xl">{letter}</h3>
+                    <ul>
                       {sortedData
                         .filter((c: { name: string }) => c.name[0] === letter)
                         .map((item: { name: string }) => (

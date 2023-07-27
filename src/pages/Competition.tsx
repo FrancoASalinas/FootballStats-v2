@@ -67,7 +67,10 @@ function Competition() {
         {currentSeasonStandings.response.length > 0 &&
           currentSeasonStandings.response[0].league.standings.map(
             (item: [Standing]) => (
-              <table className="w-full text-center border mb-10 border-dark">
+              <table
+                key={item[0].team.id + item[0].group}
+                className="w-full text-center border mb-10 border-dark"
+              >
                 <caption>{item[0].group}</caption>
                 <thead className="overflow-x-scroll">
                   <tr>
