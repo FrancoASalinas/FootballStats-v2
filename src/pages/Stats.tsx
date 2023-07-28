@@ -3,8 +3,6 @@ import { useTeamData } from './TeamLayout';
 function Stats() {
   const { teamData } = useTeamData();
 
-  console.log(teamData);
-
   return (
     <>
       <table className="w-full text-center border mb-10 border-dark">

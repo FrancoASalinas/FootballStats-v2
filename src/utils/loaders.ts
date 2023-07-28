@@ -116,6 +116,13 @@ export const teamLoader = async ({params}: any) => {
 	}   
     }).then(response => response.json())
 
-    return {teamData, availableSeasons};
+    const transfers = await fetch(`https://v3.football.api-sports.io/transfers/?team=${teamId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }).then(response => response.json());
+
+    return {teamData, availableSeasons, transfers};
     
 }

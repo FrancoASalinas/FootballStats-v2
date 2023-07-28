@@ -20,4 +20,14 @@ export interface Data {
       response: number[];
       parameters: { team: string };
     };
+    transfers: {
+        response: [{
+          player: {id: number; name: string}; transfers: [{
+            date: string; type: string;
+           teams: {
+            in: {name: string};
+            out: {name: string}}
+        }]
+        }]
+    }
   }

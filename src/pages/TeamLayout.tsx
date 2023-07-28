@@ -10,7 +10,8 @@ import LayoutHeader from '../modules/LayoutHeader';
 import { Data } from '../utils/types';
 
 function TeamLayout() {
-  const { teamData, availableSeasons }: Data = useLoaderData() as any;
+  const { teamData, availableSeasons, transfers }: Data =
+    useLoaderData() as any;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,7 +66,7 @@ function TeamLayout() {
           </li>
         </ul>
       </nav>
-      <Outlet context={{ teamData }} />
+      <Outlet context={{ teamData, transfers }} />
     </>
   );
 }
