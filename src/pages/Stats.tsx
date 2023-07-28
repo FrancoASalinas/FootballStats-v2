@@ -24,35 +24,43 @@ function Stats() {
           </tr>
           <tr>
             <th className="border border-dark">Games played</th>
-            {Object.values(teamData.response.fixtures.played).map((value) => (
-              <td key={value + 1} className="border border-dark">
-                {value}
-              </td>
-            ))}
+            {Object.values(teamData.response.fixtures.played).map(
+              (value, index) => (
+                <td key={value + index} className="border border-dark">
+                  {value}
+                </td>
+              )
+            )}
           </tr>
           <tr>
             <th className="border border-dark">Wins</th>
-            {Object.values(teamData.response.fixtures.wins).map((value) => (
-              <td key={value + 2} className="border border-dark">
-                {value}
-              </td>
-            ))}
+            {Object.values(teamData.response.fixtures.wins).map(
+              (value, index) => (
+                <td key={value + index} className="border border-dark">
+                  {value}
+                </td>
+              )
+            )}
           </tr>
           <tr>
             <th className="border border-dark">Loses</th>
-            {Object.values(teamData.response.fixtures.loses).map((value) => (
-              <td key={value + 3} className="border border-dark">
-                {value}
-              </td>
-            ))}
+            {Object.values(teamData.response.fixtures.loses).map(
+              (value, index) => (
+                <td key={value + index} className="border border-dark">
+                  {value}
+                </td>
+              )
+            )}
           </tr>
           <tr>
             <th className="border border-dark">Draws</th>
-            {Object.values(teamData.response.fixtures.draws).map((value) => (
-              <td key={value + 4} className="border border-dark">
-                {value}
-              </td>
-            ))}
+            {Object.values(teamData.response.fixtures.draws).map(
+              (value, index) => (
+                <td key={value + index} className="border border-dark">
+                  {value}
+                </td>
+              )
+            )}
           </tr>
         </tbody>
         <tbody className="">
@@ -63,15 +71,17 @@ function Stats() {
           </tr>
           <tr>
             <th>For</th>
-            {Object.values(teamData.response.goals.for.total).map((value) => (
-              <td>{value}</td>
-            ))}
+            {Object.values(teamData.response.goals.for.total).map(
+              (value, index) => (
+                <td key={value + index}>{value}</td>
+              )
+            )}
           </tr>
           <tr>
             <th>Against</th>
             {Object.values(teamData.response.goals.against.total).map(
-              (value) => (
-                <td>{value}</td>
+              (value, index) => (
+                <td>{value + index}</td>
               )
             )}
           </tr>
