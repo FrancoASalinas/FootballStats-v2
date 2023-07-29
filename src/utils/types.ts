@@ -31,3 +31,12 @@ export interface Data {
         }]
     }
   }
+
+  export interface Squad {
+    squad: {
+
+      response: [{players: [
+        {name: string; id: number; number: number; position: string; photo: string}
+      ]}]
+    }
+  }

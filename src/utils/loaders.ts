@@ -1,3 +1,4 @@
+
 const store = window.localStorage
 
 export const countryLoader = async ({params}: any) => {
@@ -125,4 +126,20 @@ export const teamLoader = async ({params}: any) => {
 
     return {teamData, availableSeasons, transfers};
     
+}
+
+export const playerLoader = async ({params}: any) =>{
+
+    const {teamId} = params;
+
+    const squad = await fetch(
+        `https://v3.football.api-sports.io/players/squads?team=${teamId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    return {squad};
 }

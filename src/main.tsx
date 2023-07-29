@@ -13,7 +13,12 @@ import App from './pages/App.tsx';
 import Competitions from './pages/Competitions.tsx';
 import Countries from './pages/Countries.tsx';
 import CountryCompetitions from './pages/CountryCompetitions.tsx';
-import { countryLoader, compLoader, teamLoader } from './utils/loaders.ts';
+import {
+  countryLoader,
+  compLoader,
+  teamLoader,
+  playerLoader,
+} from './utils/loaders.ts';
 import Competition from './pages/Competition.tsx';
 import TeamLayout from './pages/TeamLayout.tsx';
 import Stats from './pages/Stats.tsx';
@@ -49,7 +54,7 @@ const router = createBrowserRouter(
           loader={teamLoader}
         >
           <Route element={<Stats />} index />
-          <Route element={<Players />} path="players" />
+          <Route element={<Players />} path="players" loader={playerLoader} />
           <Route element={<Transfers />} path="transfers" />
         </Route>
       </Route>
