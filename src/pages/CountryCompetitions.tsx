@@ -1,4 +1,8 @@
 import { Link, useLoaderData } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
+import { useLocation } from 'react-router-dom';
+import LayoutHeader from '../modules/LayoutHeader';
 
 interface Data {
   response: [
@@ -11,12 +15,32 @@ interface Data {
 
 function CountryCompetitions() {
   const data: Data = useLoaderData() as Data;
+  const [favorite, setFavorite] = useState(
+    dataIsFavorite(data.response[0].country.name + '_comps' + '_fav')
+  );
+  const location = useLocation();
+
+  useEffect(() => {
+    favorite
+      ? useFavoriteData(
+          data.response[0].country.name + '_comps' + '_fav',
+          'add',
+          JSON.stringify([data.response[0].country.name, location.pathname])
+        )
+      : useFavoriteData(
+          data.response[0].country.name + '_comps' + '_fav',
+          'remove'
+        );
+  });
 
   return (
     <>
-      <h2 className="text-2xl py-2">
-        {data.response[0].country.name + ' Leagues'}
-      </h2>
+      <LayoutHeader
+        name={data.response[0].country.name + ' Leagues'}
+        favorite
+        isFavorite={favorite}
+        onClick={() => setFavorite((prev) => !prev)}
+      />
       <ul className="sm:grid grid-cols-2 ">
         {data.response.length > 0 &&
           data.response.map((item) => (

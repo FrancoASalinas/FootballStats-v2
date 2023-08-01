@@ -8,19 +8,48 @@ import {
 } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
 import { Data } from '../utils/types';
+import { useState, useEffect } from 'react';
+import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 
 function TeamLayout() {
   const { teamData, availableSeasons, transfers }: Data =
     useLoaderData() as any;
-
+  const [favorite, setFavorite] = useState(
+    dataIsFavorite(
+      `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`
+    )
+  );
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    favorite
+      ? useFavoriteData(
+          `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`,
+          'add',
+          JSON.stringify([
+            teamData.response.team.name +
+              ' > ' +
+              teamData.response.league.name +
+              ' > ' +
+              teamData.parameters.season,
+            location.pathname,
+          ])
+        )
+      : useFavoriteData(
+          `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`,
+          'remove'
+        );
+  });
 
   return (
     <>
       <LayoutHeader
         name={teamData.response.team.name}
         src={teamData.response.team.logo}
+        favorite
+        isFavorite={favorite}
+        onClick={() => setFavorite((prev) => !prev)}
       />
       <label>
         Season{' '}

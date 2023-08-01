@@ -1,5 +1,12 @@
-import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
+import { useEffect, useState } from 'react';
+import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 
 interface Data {
   availableSeasons: {
@@ -35,12 +42,46 @@ function Competition() {
   const { availableSeasons, currentSeasonStandings }: Data =
     useLoaderData() as Data;
   const navigate = useNavigate();
+  const [favorite, setFavorite] = useState(
+    dataIsFavorite(
+      'seasonStandings_' +
+        availableSeasons.response[0].league.id +
+        currentSeasonStandings.parameters.season +
+        '_fav'
+    )
+  );
+  const location = useLocation();
+
+  useEffect(() => {
+    favorite
+      ? useFavoriteData(
+          'seasonStandings_' +
+            availableSeasons.response[0].league.id +
+            currentSeasonStandings.parameters.season +
+            '_fav',
+          'add',
+          JSON.stringify([
+            availableSeasons.response[0].league.name,
+            location.pathname,
+          ])
+        )
+      : useFavoriteData(
+          'seasonStandings_' +
+            availableSeasons.response[0].league.id +
+            currentSeasonStandings.parameters.season +
+            '_fav',
+          'remove'
+        );
+  });
 
   return (
     <>
       <LayoutHeader
         name={availableSeasons.response[0].league.name}
         src={availableSeasons.response[0].league.logo}
+        favorite
+        isFavorite={favorite}
+        onClick={() => setFavorite((prev) => !prev)}
       />
       <nav>
         <ul></ul>
