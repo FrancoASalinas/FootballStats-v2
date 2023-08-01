@@ -7,7 +7,7 @@ function Players() {
   return (
     <>
       {squad.response[0].players.map((player) => (
-        <div className="rounded-xl border border-dark p-3 my-3">
+        <div key={player.id} className="rounded-xl border border-dark p-3 my-3">
           <h3>
             {player.name} - {player.number}
           </h3>

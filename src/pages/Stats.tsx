@@ -79,7 +79,7 @@ function Stats() {
             <th>Against</th>
             {Object.values(teamData.response.goals.against.total).map(
               (value, index) => (
-                <td>{value + index}</td>
+                <td key={value + index}>{value}</td>
               )
             )}
           </tr>

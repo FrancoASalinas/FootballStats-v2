@@ -24,20 +24,18 @@ function Home() {
               )[1];
 
               return (
-                <>
-                  <li className="flex gap-3">
-                    <Link to={path}>{title}</Link>
-                    <a
-                      className="hover:underline cursor-pointer"
-                      onClick={() => {
-                        setFavorites(favorites.filter((item) => item === key));
-                        useFavoriteData(key, 'remove');
-                      }}
-                    >
-                      Delete
-                    </a>
-                  </li>
-                </>
+                <li key={key} className="flex gap-3">
+                  <Link to={path}>{title}</Link>
+                  <a
+                    className="hover:underline cursor-pointer"
+                    onClick={() => {
+                      setFavorites(favorites.filter((item) => item === key));
+                      useFavoriteData(key, 'remove');
+                    }}
+                  >
+                    Delete
+                  </a>
+                </li>
               );
             })
           ) : (
