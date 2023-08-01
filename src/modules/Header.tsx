@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useInstallPrompt from '../utils/useInstallPrompt';
 
 function Header({
   onChange,
@@ -13,6 +14,9 @@ function Header({
   function handleNav() {
     setNav((prev) => !prev);
   }
+
+  const showInstallPrompt = useInstallPrompt();
+
   return (
     <header className="flex font-anton p-4 text-xl justify-between lg:text-2xl h-20 fixed top-0 w-full border-b border-black bg-primary z-0 items-center">
       <h2 className="justify-self-start block text-4xl">
@@ -37,7 +41,9 @@ function Header({
         </ul>
         <ul>
           <li>
-            <button className="p-3">Install the App</button>
+            <button onClick={showInstallPrompt} className="p-3">
+              Install the App
+            </button>
           </li>
           <li className="p-3">
             <label className="relative inline-block w-[60px] h-[34px]">
@@ -62,7 +68,9 @@ function Header({
             </Link>
           </li>
           <li>
-            <button className="p-3">Install the App</button>
+            <button className="p-3" onClick={showInstallPrompt}>
+              Install the App
+            </button>
           </li>
           <li className="p-3">
             <label className="relative inline-block w-[60px] h-[34px]">
