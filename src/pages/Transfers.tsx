@@ -20,7 +20,6 @@ function Transfers() {
                 transfer.date.includes(teamData.parameters.season)
               )
               .map((transfer, index) => {
-                console.log(transfer);
                 return (
                   <div
                     key={item.player.name + index}

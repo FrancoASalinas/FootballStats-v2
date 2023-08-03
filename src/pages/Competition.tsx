@@ -7,6 +7,7 @@ import {
 import LayoutHeader from '../modules/LayoutHeader';
 import { useEffect, useState } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
+import useRecentlyVisited from '../utils/useRecentlyVisited';
 
 interface Data {
   availableSeasons: {
@@ -50,6 +51,7 @@ function Competition() {
         '_fav'
     )
   );
+  const [recents, setRecents] = useRecentlyVisited();
   const location = useLocation();
 
   useEffect(() => {
@@ -72,7 +74,12 @@ function Competition() {
             '_fav',
           'remove'
         );
-  });
+
+    setRecents([
+      ...recents,
+      [availableSeasons.response[0].league.name, location.pathname],
+    ]);
+  }, []);
 
   return (
     <>

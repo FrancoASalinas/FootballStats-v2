@@ -10,6 +10,7 @@ import LayoutHeader from '../modules/LayoutHeader';
 import { Data } from '../utils/types';
 import { useState, useEffect } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
+import useRecentlyVisited from '../utils/useRecentlyVisited';
 
 function TeamLayout() {
   const { teamData, availableSeasons, transfers }: Data =
@@ -19,28 +20,30 @@ function TeamLayout() {
       `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`
     )
   );
+  const [recents, setRecents] = useRecentlyVisited();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
+    const title =
+      teamData.response.team.name +
+      ' > ' +
+      teamData.response.league.name +
+      ' > ' +
+      teamData.parameters.season;
+
     favorite
       ? useFavoriteData(
           `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`,
           'add',
-          JSON.stringify([
-            teamData.response.team.name +
-              ' > ' +
-              teamData.response.league.name +
-              ' > ' +
-              teamData.parameters.season,
-            location.pathname,
-          ])
+          JSON.stringify([title, location.pathname])
         )
       : useFavoriteData(
           `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`,
           'remove'
         );
-  });
+    setRecents([...recents, [title, location.pathname]]);
+  }, []);
 
   return (
     <>
