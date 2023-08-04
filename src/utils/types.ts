@@ -46,6 +46,58 @@ export interface Data {
 
 }]}]
     }
+  liveFixtures: {
+    response: [{
+      fixture: {
+        id: number;
+        status: {
+          long: string;
+          short: string;
+          elapsed: number;
+        }
+      };
+      league: {
+        id: number;
+        name: string;
+        country: string;
+        logo: string;
+        season: number
+      };
+      teams: {
+        home:{
+          id: number;
+          name: string;
+          logo: string;
+        };
+        away: {
+          id: number;
+          name: string;
+          logo: string;
+        }
+      };
+      goals: {
+        home: number;
+        away: number
+      };
+      events: [
+        {
+          time: {elapsed: number};
+          team: {
+            id: number;
+            name: string;
+            logo: string;
+          };
+          player: {
+            name: string;
+            id: number;
+          }
+          type: string;
+          detail: string;
+          comments: string | null;
+        }
+      ]; 
+    }]
+  }
   }
 
   export interface Squad {

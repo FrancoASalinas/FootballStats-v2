@@ -38,6 +38,11 @@ function Header({
               Competitions
             </Link>
           </li>
+          <li>
+            <Link to="live" onClick={handleNav}>
+              Live Fixtures
+            </Link>
+          </li>
         </ul>
         <ul>
           <li>
@@ -65,6 +70,11 @@ function Header({
           <li className="p-3">
             <Link to="competitions" onClick={handleNav}>
               Competitions
+            </Link>
+          </li>
+          <li className="p-3">
+            <Link to="live" onClick={handleNav}>
+              Live Fixtures
             </Link>
           </li>
           <li>
