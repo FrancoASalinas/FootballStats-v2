@@ -18,12 +18,14 @@ import {
   compLoader,
   teamLoader,
   playerLoader,
+  squadLoader,
 } from './utils/loaders.ts';
 import Competition from './pages/Competition.tsx';
 import TeamLayout from './pages/TeamLayout.tsx';
 import Stats from './pages/Stats.tsx';
 import Players from './pages/Players.tsx';
 import Transfers from './pages/Transfers.tsx';
+import Player from './pages/Player.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -54,9 +56,14 @@ const router = createBrowserRouter(
           loader={teamLoader}
         >
           <Route element={<Stats />} index />
-          <Route element={<Players />} path="players" loader={playerLoader} />
+          <Route element={<Players />} path="players" loader={squadLoader} />
           <Route element={<Transfers />} path="transfers" />
         </Route>
+        <Route
+          path="player/:playerId/:season"
+          element={<Player />}
+          loader={playerLoader}
+        />
       </Route>
       <Route element={<Welcome />} path="/welcome" />
     </>

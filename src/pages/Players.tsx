@@ -1,15 +1,17 @@
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { Squad } from '../utils/types';
 
 function Players() {
   const { squad }: Squad = useLoaderData() as any;
-  console.log(squad);
+
   return (
     <>
       {squad.response[0].players.map((player) => (
         <div key={player.id} className="rounded-xl border border-dark p-3 my-3">
           <h3>
-            {player.name} - {player.number}
+            <Link to={`/player/${player.id}/season`}>
+              {player.name} - {player.number}
+            </Link>
           </h3>
           <span>{player.position}</span>
         </div>

@@ -128,7 +128,7 @@ export const teamLoader = async ({params}: any) => {
     
 }
 
-export const playerLoader = async ({params}: any) =>{
+export const squadLoader = async ({params}: any) =>{
 
     const {teamId} = params;
 
@@ -142,4 +142,34 @@ export const playerLoader = async ({params}: any) =>{
     ).then(response => response.json())
 
     return {squad};
+}
+
+export const playerLoader = async ({params}: any) =>{
+    const {playerId, season} = params;
+
+    const availableSeasons = await fetch(
+        `https://v3.football.api-sports.io/players/seasons?player=${playerId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+ 
+
+    const player = await fetch(
+        season === 'season' ?  
+        `https://v3.football.api-sports.io/players?id=${playerId}&season=${availableSeasons.response.slice(-1)}`
+        : `https://v3.football.api-sports.io/players?id=${playerId}&season=${season}`
+        , {"method": "GET"
+        ,
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    return {player, availableSeasons};
+    
 }
