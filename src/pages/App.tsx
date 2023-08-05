@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../modules/Header';
-import { useState } from 'react';
+import useDarkTheme from '../utils/useDarkTheme';
 
 function App() {
-  const [darkTheme, setDarkTheme] = useState(false);
+  const [darkTheme, setDarkTheme] = useDarkTheme();
 
   function toggleTheme() {
     setDarkTheme((prev) => !prev);
