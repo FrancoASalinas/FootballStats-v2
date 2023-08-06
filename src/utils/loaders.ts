@@ -173,3 +173,38 @@ export const playerLoader = async ({params}: any) =>{
     return {player, availableSeasons};
     
 }
+
+export const liveFixturesLoader = async () =>{
+
+    const liveFixtures = await fetch(`https://v3.football.api-sports.io/fixtures?live=all`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    return {liveFixtures};
+}
+
+export const fixtureLoader = async ({params}: any) =>{
+    const {fixtureId} = params;
+
+    const fixtureStats = await fetch(`https://v3.football.api-sports.io/fixtures/statistics?fixture=${fixtureId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    const fixture = await fetch(`https://v3.football.api-sports.io/fixtures?id=${fixtureId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    return {fixtureStats, fixture};
+}
