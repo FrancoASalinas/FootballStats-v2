@@ -38,7 +38,7 @@ function Header({
               Competitions
             </Link>
           </li>
-          <li>
+          <li className="p-3">
             <Link to="live" onClick={handleNav}>
               Live Fixtures
             </Link>
@@ -67,6 +67,11 @@ function Header({
       </nav>
       <nav className="hidden sm:block">
         <ul className="flex justify-between divide-x divide-dark">
+          <li className="p-3">
+            <Link to="live" onClick={handleNav}>
+              Live Fixtures
+            </Link>
+          </li>
           <li className="p-3">
             <Link to="competitions" onClick={handleNav}>
               Competitions

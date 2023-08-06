@@ -20,6 +20,7 @@ import {
   playerLoader,
   squadLoader,
   liveFixturesLoader,
+  fixtureLoader,
 } from './utils/loaders.ts';
 import Competition from './pages/Competition.tsx';
 import TeamLayout from './pages/TeamLayout.tsx';
@@ -28,17 +29,28 @@ import Players from './pages/Players.tsx';
 import Transfers from './pages/Transfers.tsx';
 import Player from './pages/Player.tsx';
 import LiveFixtures from './pages/LiveFixtures.tsx';
+import Fixture from './pages/Fixture.tsx';
+import FixturesLayout from './pages/FixturesLayout.tsx';
+import FixtureEvents from './pages/FixtureEvents.tsx';
+import FixtureStats from './pages/FixtureStats.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route element={<App />} path="/">
         <Route element={<Home />} index />
-        <Route
-          element={<LiveFixtures />}
-          path="live"
-          loader={liveFixturesLoader}
-        />
+        <Route path="live" element={<FixturesLayout />}>
+          <Route
+            element={<LiveFixtures />}
+            id="live"
+            loader={liveFixturesLoader}
+            index
+          />
+          <Route path=":fixtureId" element={<Fixture />} loader={fixtureLoader}>
+            <Route index element={<FixtureStats />} />
+            <Route path="events" element={<FixtureEvents />} />
+          </Route>
+        </Route>
         <Route element={<Competitions />} path="competitions">
           <Route element={<Countries />} index />
           <Route

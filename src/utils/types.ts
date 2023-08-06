@@ -47,6 +47,7 @@ export interface Data {
 }]}]
     }
   liveFixtures: {
+    parameters: any;
     response: [{
       fixture: {
         id: number;
@@ -97,6 +98,15 @@ export interface Data {
         }
       ]; 
     }]
+  };
+  fixtureStats: {
+    results: number;
+    response: [
+      {
+        team: {id: number; name: string; logo: string};
+        statistics: [{type: string; value: number}]
+      }
+    ]
   }
   }
 
