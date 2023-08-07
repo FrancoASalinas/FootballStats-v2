@@ -82,7 +82,7 @@ function Competition() {
   }, []);
 
   return (
-    <>
+    <div className="my-10">
       <LayoutHeader
         name={availableSeasons.response[0].league.name}
         src={availableSeasons.response[0].league.logo}
@@ -98,11 +98,7 @@ function Competition() {
         <select
           className="my-5"
           defaultValue={currentSeasonStandings.parameters.season}
-          onChange={(e) =>
-            navigate(
-              `/competitions/comps/${availableSeasons.response[0].league.id}/${e.target.value}`
-            )
-          }
+          onChange={(e) => navigate(`${e.target.value}`)}
         >
           {availableSeasons.response[0].seasons.map(
             (season: { year: number }) => (
@@ -163,7 +159,7 @@ function Competition() {
             )
           )}
       </article>
-    </>
+    </div>
   );
 }
 

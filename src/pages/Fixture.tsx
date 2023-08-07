@@ -29,7 +29,7 @@ function Fixture() {
         </div>
       </header>
       <nav className="w-full p-5 text-xl flex justify-between">
-        <Link to={`/live/${fixture.parameters.id}`}>Stats</Link>
+        <Link to={`/fixtures/${fixture.parameters.id}`}>Stats</Link>
         <Link to="events">Events</Link>
       </nav>
       <article>

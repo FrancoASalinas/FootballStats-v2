@@ -34,12 +34,12 @@ function Header({
       >
         <ul>
           <li className="p-3">
-            <Link to="competitions" onClick={handleNav}>
+            <Link to="countries" onClick={handleNav}>
               Competitions
             </Link>
           </li>
           <li className="p-3">
-            <Link to="live" onClick={handleNav}>
+            <Link to="fixtures" onClick={handleNav}>
               Live Fixtures
             </Link>
           </li>
@@ -68,12 +68,12 @@ function Header({
       <nav className="hidden sm:block">
         <ul className="flex justify-between divide-x divide-dark">
           <li className="p-3">
-            <Link to="live" onClick={handleNav}>
+            <Link to="fixtures" onClick={handleNav}>
               Live Fixtures
             </Link>
           </li>
           <li className="p-3">
-            <Link to="competitions" onClick={handleNav}>
+            <Link to="countries" onClick={handleNav}>
               Competitions
             </Link>
           </li>

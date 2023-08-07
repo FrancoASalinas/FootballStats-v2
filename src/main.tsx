@@ -39,35 +39,31 @@ const router = createBrowserRouter(
     <>
       <Route element={<App />} path="/">
         <Route element={<Home />} index />
-        <Route path="live" element={<FixturesLayout />}>
-          <Route
-            element={<LiveFixtures />}
-            id="live"
-            loader={liveFixturesLoader}
-            index
-          />
+        <Route path="fixtures" element={<FixturesLayout />}>
+          <Route element={<LiveFixtures />} loader={liveFixturesLoader} index />
           <Route path=":fixtureId" element={<Fixture />} loader={fixtureLoader}>
             <Route index element={<FixtureStats />} />
             <Route path="events" element={<FixtureEvents />} />
           </Route>
         </Route>
-        <Route element={<Competitions />} path="competitions">
+        <Route element={<Competitions />} path="countries">
           <Route element={<Countries />} index />
           <Route
             element={<CountryCompetitions />}
             path=":countryName"
             loader={countryLoader}
-          />
-          <Route
-            element={<Competition />}
-            path="comps/:compId"
-            loader={compLoader}
-          />
-          <Route
-            element={<Competition />}
-            path="comps/:compId/:compSeason"
-            loader={compLoader}
-          />
+          >
+            <Route
+              element={<Competition />}
+              path=":compId"
+              loader={compLoader}
+            />
+            <Route
+              element={<Competition />}
+              path=":compId/:compSeason"
+              loader={compLoader}
+            />
+          </Route>
         </Route>
         <Route
           element={<TeamLayout />}
@@ -83,8 +79,8 @@ const router = createBrowserRouter(
           element={<Player />}
           loader={playerLoader}
         />
+        <Route element={<Welcome />} path="welcome" />
       </Route>
-      <Route element={<Welcome />} path="/welcome" />
     </>
   )
 );
