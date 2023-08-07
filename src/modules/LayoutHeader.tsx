@@ -15,7 +15,7 @@ function LayoutHeader({
 }) {
   return (
     <div className="flex justify-between">
-      <div>
+      <div className="flex gap-5">
         <h1 className="text-3xl ">{name}</h1>
         {favorite && (
           <FavoriteButton
@@ -24,7 +24,7 @@ function LayoutHeader({
           />
         )}
       </div>
-      <img src={src} className="w-20" />
+      {navigator.onLine && <img src={src} className="w-20 " />}
     </div>
   );
 }

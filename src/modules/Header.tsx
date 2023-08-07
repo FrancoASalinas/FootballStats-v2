@@ -18,7 +18,7 @@ function Header({
   const showInstallPrompt = useInstallPrompt();
 
   return (
-    <header className="flex font-anton p-4 text-xl justify-between lg:text-2xl h-20 fixed top-0 w-full border-b border-black bg-primary z-0 items-center">
+    <header className="flex font-anton p-4 text-xl justify-between lg:text-2xl h-20 fixed top-0 w-full dark:border-gray-600 border-b border-black bg-primary z-0 items-center">
       <h2 className="justify-self-start block text-4xl">
         <Link to="/">FS</Link>
       </h2>

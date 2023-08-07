@@ -3,6 +3,7 @@ import LayoutHeader from '../modules/LayoutHeader';
 import { Data } from '../utils/types';
 import { useEffect, useState } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
+import CustomSelect from '../modules/CustomSelect';
 
 function Player() {
   const { player, availableSeasons }: Data = useLoaderData() as any;
@@ -48,16 +49,16 @@ function Player() {
           </ul>
           <label>
             Season
-            <select
+            <CustomSelect
               defaultValue={player.parameters.season}
-              onChange={(e) =>
+              onChange={(e: any) =>
                 navigate(`/player/${player.parameters.id}/${e.target.value}`)
               }
             >
               {availableSeasons.response.map((season) => (
                 <option>{season}</option>
               ))}
-            </select>
+            </CustomSelect>
           </label>
         </div>
         <div className="border border-b-dark w-full my-3"></div>

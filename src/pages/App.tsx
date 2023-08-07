@@ -13,9 +13,11 @@ function App() {
   return (
     <>
       <Header onChange={toggleTheme} darkTheme={darkTheme} />
-      <main className="bg-light font-roboto mt-20 p-5 min-h-screen">
-        <Breadcrumbs />
-        <Outlet />
+      <main className="bg-light font-roboto p-5 min-h-screen dark:bg-dark dark:text-light">
+        <div className="mt-20">
+          <Breadcrumbs />
+          <Outlet />
+        </div>
       </main>
     </>
   );
