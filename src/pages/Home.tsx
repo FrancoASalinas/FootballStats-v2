@@ -15,8 +15,12 @@ function Home() {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-[65%_35%]">
         <article className="my-5 w-full">
-          <h2 className="text-3xl">Your favorite Topics</h2>
-          <ul>
+          <h2 className="text-3xl mb-5">Your favorite Topics</h2>
+          <ul
+            className={`divide-dark ${
+              useFavoriteData('_fav', 'retrieveKey').length > 0 && 'divide-y'
+            }  dark:divide-light`}
+          >
             {useFavoriteData('_fav', 'retrieveKey').length > 0 ? (
               useFavoriteData('_fav', 'retrieveKey').map((key) => {
                 const title = JSON.parse(
@@ -27,9 +31,12 @@ function Home() {
                 )[1];
 
                 return (
-                  <li key={key} className="flex gap-3">
+                  <li
+                    key={key}
+                    className="flex py-3 justify-between w-full items-center"
+                  >
                     <Link to={path}>{title}</Link>
-                    <a
+                    <button
                       className="hover:underline cursor-pointer"
                       onClick={() => {
                         setFavorites(favorites.filter((item) => item === key));
@@ -37,34 +44,44 @@ function Home() {
                       }}
                     >
                       Delete
-                    </a>
+                    </button>
                   </li>
                 );
               })
             ) : (
-              <Link className="py-2 my-2 underline" to="countries">
-                Browse Teams
-              </Link>
+              <>
+                <p className="text-xl">You don't have any favorites yet.</p>
+                <Link className="py-2 my-2 underline" to="countries">
+                  Browse Teams
+                </Link>
+              </>
             )}
           </ul>
         </article>
-        <aside className="my-5 border-t p-2 sm:border-t-0 sm:border-l h-full border-dark min-h-[50%]">
-          <h3 className="text-2xl">Recently visited Topics</h3>
-          <ul>
+        <aside className="my-5 border-t pt-5 sm:pt-0 dark:border-light p-2 sm:border-t-0 sm:border-l h-full border-dark min-h-[50%]">
+          <h3 className="text-2xl mb-5">Recently visited Topics</h3>
+          <ul
+            className={`${
+              recents.length > 0 && 'divide-y'
+            } divide-dark dark:divide-white`}
+          >
             {recents.length > 0 ? (
               recents.map((recent: any, index: number) => {
                 const title = recent[0];
                 const path = recent[1];
 
                 return (
-                  <li key={recent[0] + index} className="flex gap-3">
+                  <li
+                    key={recent[0] + index}
+                    className="flex py-3 justify-between w-full items-center"
+                  >
                     <Link to={path}>{title}</Link>
-                    <a
+                    <button
                       className="hover:underline cursor-pointer"
                       onClick={() => null}
                     >
                       Delete
-                    </a>
+                    </button>
                   </li>
                 );
               })

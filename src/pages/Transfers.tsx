@@ -1,3 +1,4 @@
+import Dropdown from '../modules/Dropdown';
 import { useTeamData } from './TeamLayout';
 
 function Transfers() {
@@ -10,11 +11,7 @@ function Transfers() {
           item.transfers[0].date.includes(teamData.parameters.season)
         )
         .map((item) => (
-          <div
-            key={item.player.name}
-            className="p-3 border rounded-xl border-dark my-3"
-          >
-            <h3>{item.player.name}</h3>
+          <Dropdown key={item.player.name} title={item.player.name}>
             {item.transfers
               .filter((transfer) =>
                 transfer.date.includes(teamData.parameters.season)
@@ -33,7 +30,7 @@ function Transfers() {
                   </div>
                 );
               })}
-          </div>
+          </Dropdown>
         ))}
     </>
   );

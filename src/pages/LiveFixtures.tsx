@@ -29,7 +29,7 @@ function LiveFixtures() {
               <img className="w-8 " src={fixture.teams.away.logo}></img>
             </span>
             {fixture.fixture.status.short}
-            <button onClick={() => navigate(fixture.fixture.id)}>
+            <button onClick={() => navigate(`${fixture.fixture.id}`)}>
               More Stats
             </button>
           </li>

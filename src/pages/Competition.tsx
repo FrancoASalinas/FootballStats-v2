@@ -8,6 +8,7 @@ import LayoutHeader from '../modules/LayoutHeader';
 import { useEffect, useState } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import useRecentlyVisited from '../utils/useRecentlyVisited';
+import CustomSelect from '../modules/CustomSelect';
 
 interface Data {
   availableSeasons: {
@@ -82,7 +83,7 @@ function Competition() {
   }, []);
 
   return (
-    <>
+    <div className="my-10">
       <LayoutHeader
         name={availableSeasons.response[0].league.name}
         src={availableSeasons.response[0].league.logo}
@@ -95,21 +96,16 @@ function Competition() {
       </nav>
       <label>
         Season{' '}
-        <select
-          className="my-5"
+        <CustomSelect
           defaultValue={currentSeasonStandings.parameters.season}
-          onChange={(e) =>
-            navigate(
-              `/competitions/comps/${availableSeasons.response[0].league.id}/${e.target.value}`
-            )
-          }
+          onChange={(e: any) => navigate(`${e.target.value}`)}
         >
           {availableSeasons.response[0].seasons.map(
             (season: { year: number }) => (
               <option key={season.year}>{season.year}</option>
             )
           )}
-        </select>
+        </CustomSelect>
       </label>
       <article>
         {currentSeasonStandings.response.length > 0 &&
@@ -163,7 +159,7 @@ function Competition() {
             )
           )}
       </article>
-    </>
+    </div>
   );
 }
 

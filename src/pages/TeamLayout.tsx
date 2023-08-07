@@ -11,6 +11,7 @@ import { Data } from '../utils/types';
 import { useState, useEffect } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import useRecentlyVisited from '../utils/useRecentlyVisited';
+import CustomSelect from '../modules/CustomSelect';
 
 function TeamLayout() {
   const { teamData, availableSeasons, transfers }: Data =
@@ -56,10 +57,9 @@ function TeamLayout() {
       />
       <label>
         Season{' '}
-        <select
-          className="m-2"
+        <CustomSelect
           defaultValue={teamData.parameters.season}
-          onChange={(e) =>
+          onChange={(e: any) =>
             navigate(
               `/team/${teamData.parameters.league}/${availableSeasons.parameters.team}/${e.target.value}`
             )
@@ -68,14 +68,7 @@ function TeamLayout() {
           {availableSeasons.response.map((season) => (
             <option key={season}>{season}</option>
           ))}
-        </select>
-      </label>
-      <label>
-        Competition{' '}
-        <select
-          className="m-2"
-          defaultValue={teamData.response.league.name}
-        ></select>
+        </CustomSelect>
       </label>
       <nav className="w-full h-10 my-5">
         <ul className="flex justify-between flex-wrap">

@@ -63,7 +63,7 @@ export const compLoader = async ({params}: any) => {
         }
     }).then(response => {
         if(!response.ok){
-            return store.getItem(availableSeasons) !== null ? store.getItem('availableSeasons_' + compId) : new Error('Error retreiving data')
+            return store.getItem(availableSeasons) !== null ? store.getItem('availableSeasons_' + compId) : new Error('Error retrieving data')
         } 
             
             return response.json()
@@ -102,59 +102,123 @@ export const teamLoader = async ({params}: any) => {
 
     const {compId, teamId, season} = params;
 
+    if(!navigator.onLine){
+        if(store.getItem(`team_${compId}_${teamId}_${season}`) && store.getItem(`teamSeasons_${teamId}`) && store.getItem(`transfers_${teamId}`)){
+            const teamData = JSON.parse(store[`team_${compId}_${teamId}_${season}`]);
+            const availableSeasons = JSON.parse(store[`teamSeasons_${teamId}`]);
+            const transfers = JSON.parse(store[`transfers_${teamId}`]);
 
-    const teamData = await fetch(`https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`, {"method": "GET",
+            return {teamData, availableSeasons, transfers};
+        }
+        throw new Error('Looks like you are offline and we couldn\'t save this data')
+    } else {
+       
+        const teamData = await fetch(`https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`, {"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
-    }).then(response => response.json());
+    }).then(response => {
+        if(!response.ok){
+            return store.getItem(`team_${compId}_${teamId}_${season}`) ? store.getItem(`team_${compId}_${teamId}_${season}`) : new Error('Error retrieving data')
+        }
+
+        return response.json()
+    }).then(response => {
+        store.setItem(`team_${compId}_${teamId}_${season}`, JSON.stringify(response));
+        return response
+    })
 
     const availableSeasons = await fetch(`https://v3.football.api-sports.io/teams/seasons?team=${teamId}`, {"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
-    }).then(response => response.json())
-
+    }).then(response => {
+        if(!response.ok){
+            return store.getItem(`teamSeasons_${teamId}`) ? store[`teamSeasons_${teamId}`] : new Error('Error retrieving data')
+        }
+        return response.json();
+    }).then(response => {
+        store.setItem(`teamSeasons_${teamId}`, JSON.stringify(response));
+    
+        return response
+    });
+    
     const transfers = await fetch(`https://v3.football.api-sports.io/transfers/?team=${teamId}`, {"method": "GET",
 	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
-    }).then(response => response.json());
+}).then(response => {
+    if(!response.ok){
+        return store.getItem(`transfers_${teamId}`) ? store[`transfers_${teamId}`] : new Error('Error retrieving data')
+    }
+    return response.json();
+}).then(response => {
+    store.setItem(`transfers_${teamId}`, JSON.stringify(response));
 
-    return {teamData, availableSeasons, transfers};
-    
+    return response
+});
+
+return {teamData, availableSeasons, transfers};
+}
+
 }
 
 export const squadLoader = async ({params}: any) =>{
 
     const {teamId} = params;
 
-    const squad = await fetch(
+    if(!navigator.onLine){
+        if(store.getItem(`squad_${teamId}`)){
+            return store[`squad_${teamId}`]
+        } throw new Error('Looks like you are offline and we couldn\'t save this data')
+    } else {   
+        const squad = await fetch(
         `https://v3.football.api-sports.io/players/squads?team=${teamId}`, {"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
     }
-    ).then(response => response.json())
+    ).then(response => response.json()).then(response => {
+        store.setItem(`squad_${teamId}`, JSON.stringify(response));
+        return response
+})
 
     return {squad};
+    }
 }
 
 export const playerLoader = async ({params}: any) =>{
     const {playerId, season} = params;
 
-    const availableSeasons = await fetch(
+    if(!navigator.onLine){
+        if(store.getItem(`playerSeasons_${playerId}`) && store.getItem(season === 'season' ? `player_${playerId}` : `player_${playerId}_${season}`)){
+            const availableSeasons = JSON.parse(store[`playerSeasons_${playerId}`]);
+            const player = JSON.parse(store[season === 'season' ? `player_${playerId}` : `player_${playerId}_${season}`]);
+
+            return {player, availableSeasons};
+        } throw new Error('Looks like you are offline and we couldn\'t save this data')
+    } else {
+
+        
+        const availableSeasons = await fetch(
         `https://v3.football.api-sports.io/players/seasons?player=${playerId}`, {"method": "GET",
 	"headers": {
 		"x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
     }
-    ).then(response => response.json())
+    ).then(response => {
+        if(!response.ok){
+            return store[`playerSeasons_${playerId}`] !== null ? store[`playerSeasons_${playerId}`] : new Error('error retrieving data');
+        } return response.json()
+    }).then(response => {
+        store.setItem(`playerSeasons_${playerId}`, JSON.stringify(response));
+        return response
+    })
  
 
     const player = await fetch(
@@ -164,14 +228,19 @@ export const playerLoader = async ({params}: any) =>{
         , {"method": "GET"
         ,
 	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
+        "x-rapidapi-host": "v3.football.api-sports.io",
 		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
 	}   
-    }
-    ).then(response => response.json())
+}
+).then(response => 
+     response.json()).then(response => {
+    store.setItem(season === 'season' ? `player_${playerId}` : `player_${playerId}_${season}`, JSON.stringify(response));
+    return response
+})
 
-    return {player, availableSeasons};
-    
+return {player, availableSeasons};
+}
+
 }
 
 export const liveFixturesLoader = async () =>{

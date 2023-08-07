@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from 'react-router-dom';
+import { Link, Outlet, useLoaderData } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import { useLocation } from 'react-router-dom';
@@ -45,10 +45,11 @@ function CountryCompetitions() {
         {data.response.length > 0 &&
           data.response.map((item) => (
             <li key={item.league.id}>
-              <Link to={`../comps/${item.league.id}`}>{item.league.name}</Link>
+              <Link to={`${item.league.id}`}>{item.league.name}</Link>
             </li>
           ))}
       </ul>
+      <Outlet />
     </>
   );
 }
