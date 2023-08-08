@@ -43,7 +43,7 @@ function TeamLayout() {
           `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`,
           'remove'
         );
-    setRecents([...recents, [title, location.pathname]]);
+    setRecents([[title, location.pathname], ...recents]);
   }, []);
 
   return (

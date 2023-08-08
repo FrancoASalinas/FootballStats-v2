@@ -5,7 +5,7 @@ import useRecentlyVisited from '../utils/useRecentlyVisited';
 
 function Home() {
   const [favorites, setFavorites] = useState<string[] | []>([]);
-  const [recents] = useRecentlyVisited();
+  const [recents, setRecents] = useRecentlyVisited();
 
   useEffect(() => {
     setFavorites(useFavoriteData('_fav', 'retrieveKey'));
@@ -59,7 +59,17 @@ function Home() {
           </ul>
         </article>
         <aside className="my-5 border-t pt-5 sm:pt-0 dark:border-light p-2 sm:border-t-0 sm:border-l h-full border-dark min-h-[50%]">
-          <h3 className="text-2xl mb-5">Recently visited Topics</h3>
+          <div className="flex justify-between">
+            <h3 className="text-2xl mb-5">Recently visited Topics</h3>
+            {recents.length > 0 && (
+              <button
+                className="hover:underline cursor-pointer"
+                onClick={() => setRecents([])}
+              >
+                Delete All
+              </button>
+            )}
+          </div>
           <ul
             className={`${
               recents.length > 0 && 'divide-y'
@@ -78,7 +88,11 @@ function Home() {
                     <Link to={path}>{title}</Link>
                     <button
                       className="hover:underline cursor-pointer"
-                      onClick={() => null}
+                      onClick={() =>
+                        setRecents(
+                          recents.filter((item: any) => item !== recent)
+                        )
+                      }
                     >
                       Delete
                     </button>

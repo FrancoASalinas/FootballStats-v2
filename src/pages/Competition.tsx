@@ -77,8 +77,8 @@ function Competition() {
         );
 
     setRecents([
-      ...recents,
       [availableSeasons.response[0].league.name, location.pathname],
+      ...recents,
     ]);
   }, []);
 
