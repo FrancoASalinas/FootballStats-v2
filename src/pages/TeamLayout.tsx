@@ -70,9 +70,13 @@ function TeamLayout() {
           ))}
         </CustomSelect>
       </label>
-      <nav className="w-full h-10 my-5">
-        <ul className="flex justify-between flex-wrap">
-          <li className="p-2 hover:underline">
+      <nav className="w-full my-5">
+        <ul className="flex bg-primary rounded-lg divide-x divide-dark border-dark border justify-around h-10">
+          <li
+            className={`p-2 hover:underline text-center w-full rounded-l-lg rounded-bl-lg ${
+              location.pathname.split('/').length === 5 && 'bg-light text-black'
+            }`}
+          >
             <Link
               to={
                 location.pathname.split('/').length > 5
@@ -83,10 +87,22 @@ function TeamLayout() {
               Statistics
             </Link>
           </li>
-          <li className="p-2 hover:underline">
+          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
+          <li
+            className={`p-2 hover:underline text-center w-full ${
+              location.pathname.split('/').includes('players') &&
+              'bg-light text-black'
+            }`}
+          >
             <Link to="players">Players</Link>
           </li>
-          <li className="p-2 hover:underline">
+          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
+          <li
+            className={`p-2 hover:underline text-center w-full rounded-r-lg rounded-br-lg ${
+              location.pathname.split('/').includes('transfers') &&
+              'bg-light text-black'
+            }`}
+          >
             <Link to="transfers">Transfers</Link>
           </li>
         </ul>
