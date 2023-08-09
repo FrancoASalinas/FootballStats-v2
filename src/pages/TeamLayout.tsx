@@ -87,7 +87,6 @@ function TeamLayout() {
               Statistics
             </Link>
           </li>
-          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
           <li
             className={`p-2 hover:underline text-center w-full ${
               location.pathname.split('/').includes('players') &&
@@ -96,7 +95,6 @@ function TeamLayout() {
           >
             <Link to="players">Players</Link>
           </li>
-          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
           <li
             className={`p-2 hover:underline text-center w-full rounded-r-lg rounded-br-lg ${
               location.pathname.split('/').includes('transfers') &&

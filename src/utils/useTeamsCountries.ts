@@ -1,13 +1,29 @@
 import { useEffect, useState } from 'react';
+import useOfflineMode from './useOfflineMode';
 
+interface Country {
+  name: string;
+}
 
 export default function useTeamsCountries() {
-  const [countries, setTeamsCountries]: any = useState([]);
+  const [countries, setTeamsCountries] = useState<any[]>([]);
+  const [offline] = useOfflineMode();
 
   useEffect(() => {
-    if(!navigator.onLine){
+
+    if(!navigator.onLine || offline){
       if(window.localStorage.getItem('countries') !== null){
-        setTeamsCountries(JSON.parse(window.localStorage.countries))
+        setTeamsCountries(JSON.parse(window.localStorage.countries).filter(
+          (country: any) =>
+            localStorage.getItem(`${country.name}_comps`) !== null
+        )
+        .sort((a: Country, b: Country) => {
+          if (a.name > b.name) {
+            return +1;
+          } else if (a.name < b.name) {
+            return -1;
+          } else return 0;
+        }))
       }
       else{
         throw new Error('Looks like you are offline and we couldn\'t save this data' )
@@ -30,12 +46,36 @@ export default function useTeamsCountries() {
         }
       } )
       .then((result) => {
-        setTeamsCountries(result.response);
+        offline
+          ? setTeamsCountries(result.response
+              .filter(
+                (country: any) =>
+                  localStorage.getItem(`${country.name}_comps`) !== null
+              )
+              .sort((a: Country, b: Country) => {
+                if (a.name > b.name) {
+                  return +1;
+                } else if (a.name < b.name) {
+                  return -1;
+                } else return 0;
+              }))
+          : setTeamsCountries(result.response.sort((a: Country, b: Country) => {
+              if (a.name > b.name) {
+                return +1;
+              } else if (a.name < b.name) {
+                return -1;
+              } else return 0;
+            }));
         window.localStorage.countries = JSON.stringify(result.response)
       } )
       .catch((error) => console.log('error', error));
-    }
-  }, []);
 
-  return countries;
+    }
+
+    
+
+  }, [offline]);
+
+  return  [countries, offline] as const;
+;
 }

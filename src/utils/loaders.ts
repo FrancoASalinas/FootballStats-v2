@@ -5,9 +5,12 @@ export const countryLoader = async ({params}: any) => {
 
     const {countryName} = params;
 
-    if(!navigator.onLine){
+    if(!navigator.onLine || store.getItem('offline') !== null){
         if(store.getItem(countryName + '_comps') !== null){
-            return JSON.parse(store[countryName + '_comps'])
+            const offlineResponse = JSON.parse(store[countryName + '_comps']);
+            offlineResponse.response = offlineResponse.response.filter((comp: any) => store.getItem(`seasonStandings_${comp.league.id}`) !== null );
+
+           return offlineResponse
         } else {
             throw new Error('Looks like you are offline and we couldn\'t save this data')
         }
@@ -33,7 +36,6 @@ export const countryLoader = async ({params}: any) => {
     return response
 }
 )
-
 
 return data
 }

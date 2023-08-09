@@ -1,8 +1,9 @@
-import { Link, Outlet, useLoaderData } from 'react-router-dom';
+import { Link, Outlet, useLoaderData, useRevalidator } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import { useLocation } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
+import useOfflineMode from '../utils/useOfflineMode';
 
 interface Data {
   response: [
@@ -19,6 +20,10 @@ function CountryCompetitions() {
     dataIsFavorite(data.response[0].country.name + '_comps' + '_fav')
   );
   const location = useLocation();
+  const revalidator = useRevalidator();
+  const [offline] = useOfflineMode();
+
+  useEffect(() => revalidator.revalidate(), [offline]);
 
   useEffect(() => {
     favorite
