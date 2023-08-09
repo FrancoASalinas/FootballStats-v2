@@ -14,8 +14,7 @@ import useRecentlyVisited from '../utils/useRecentlyVisited';
 import CustomSelect from '../modules/CustomSelect';
 
 function TeamLayout() {
-  const { teamData, availableSeasons, transfers }: Data =
-    useLoaderData() as any;
+  const { teamData, availableSeasons }: Data = useLoaderData() as any;
   const [favorite, setFavorite] = useState(
     dataIsFavorite(
       `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`
@@ -105,7 +104,7 @@ function TeamLayout() {
           </li>
         </ul>
       </nav>
-      <Outlet context={{ teamData, transfers }} />
+      <Outlet context={{ teamData }} />
     </>
   );
 }
