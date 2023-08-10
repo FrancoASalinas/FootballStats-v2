@@ -38,16 +38,23 @@ export default function useTeamsCountries() {
       headers: myHeaders,
       redirect: 'follow',
     })
-      .then((response) =>{
-        if(!response.ok){
-          return window.localStorage.getItem('countries') !== null ? window.localStorage.countries.json() : new Error('Error retreiving data')
-        } else{
-          return response.json()
+      .then((response) => {
+        if (!response.ok) {
+          return window.localStorage.getItem('countries') !== null
+            ? window.localStorage.countries.json()
+            : new Error('Error retreiving data');
+        } else {
+          return response.json();
         }
-      } )
+      })
       .then((result) => {
-        offline
-          ? setTeamsCountries(result.response
+        console.log(result);
+        if (Object.values(result.errors).length > 0) {
+          throw new Error(Object.values(result.errors)[0] as string);
+        }
+        if (offline) {
+          setTeamsCountries(
+            result.response
               .filter(
                 (country: any) =>
                   localStorage.getItem(`${country.name}_comps`) !== null
@@ -58,17 +65,25 @@ export default function useTeamsCountries() {
                 } else if (a.name < b.name) {
                   return -1;
                 } else return 0;
-              }))
-          : setTeamsCountries(result.response.sort((a: Country, b: Country) => {
+              })
+          );
+        } else {
+          setTeamsCountries(
+            result.response.sort((a: Country, b: Country) => {
               if (a.name > b.name) {
                 return +1;
               } else if (a.name < b.name) {
                 return -1;
               } else return 0;
-            }));
-        window.localStorage.countries = JSON.stringify(result.response)
-      } )
-      .catch((error) => console.log('error', error));
+            })
+          );
+
+          window.localStorage.countries = JSON.stringify(result.response);
+        }
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
 
     }
 
