@@ -84,8 +84,8 @@ const router = createBrowserRouter(
           element={<Player />}
           loader={playerLoader}
         />
-        <Route element={<Welcome />} path="welcome" />
       </Route>
+      <Route element={<Welcome />} path="welcome" />
     </>
   )
 );

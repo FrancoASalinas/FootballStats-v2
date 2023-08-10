@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useFavoriteData from '../utils/useFavoriteData';
 import { useState, useEffect } from 'react';
 import useRecentlyVisited from '../utils/useRecentlyVisited';
@@ -7,8 +7,15 @@ function Home() {
   const [favorites, setFavorites] = useState<string[] | []>([]);
   const [recents, setRecents] = useRecentlyVisited();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setFavorites(useFavoriteData('_fav', 'retrieveKey'));
+
+    if (localStorage.getItem('welcome') === null) {
+      localStorage.welcome = '';
+      navigate('/welcome');
+    }
   }, []);
 
   return (
