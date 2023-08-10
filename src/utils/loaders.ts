@@ -5,9 +5,12 @@ export const countryLoader = async ({params}: any) => {
 
     const {countryName} = params;
 
-    if(!navigator.onLine){
+    if(!navigator.onLine || store.getItem('offline') !== null){
         if(store.getItem(countryName + '_comps') !== null){
-            return JSON.parse(store[countryName + '_comps'])
+            const offlineResponse = JSON.parse(store[countryName + '_comps']);
+            offlineResponse.response = offlineResponse.response.filter((comp: any) => store.getItem(`seasonStandings_${comp.league.id}`) !== null );
+
+           return offlineResponse
         } else {
             throw new Error('Looks like you are offline and we couldn\'t save this data')
         }
@@ -33,7 +36,6 @@ export const countryLoader = async ({params}: any) => {
     return response
 }
 )
-
 
 return data
 }
@@ -106,9 +108,8 @@ export const teamLoader = async ({params}: any) => {
         if(store.getItem(`team_${compId}_${teamId}_${season}`) && store.getItem(`teamSeasons_${teamId}`) && store.getItem(`transfers_${teamId}`)){
             const teamData = JSON.parse(store[`team_${compId}_${teamId}_${season}`]);
             const availableSeasons = JSON.parse(store[`teamSeasons_${teamId}`]);
-            const transfers = JSON.parse(store[`transfers_${teamId}`]);
 
-            return {teamData, availableSeasons, transfers};
+            return {teamData, availableSeasons};
         }
         throw new Error('Looks like you are offline and we couldn\'t save this data')
     } else {
@@ -145,6 +146,24 @@ export const teamLoader = async ({params}: any) => {
         return response
     });
     
+
+return {teamData, availableSeasons};
+}
+}
+
+export const transfersLoader = async ({params}: any) => {
+    const {teamId} = params; 
+
+    if(!navigator.onLine || store.getItem('offline') !== null){
+        if(store.getItem(`transfers_${teamId}`)){
+            const transfers = JSON.parse(store[`transfers_${teamId}`]);
+
+            return {transfers};
+        }
+        throw new Error('Looks like you are offline and we couldn\'t save this data')
+    } else {
+
+        
     const transfers = await fetch(`https://v3.football.api-sports.io/transfers/?team=${teamId}`, {"method": "GET",
 	"headers": {
         "x-rapidapi-host": "v3.football.api-sports.io",
@@ -161,9 +180,8 @@ export const teamLoader = async ({params}: any) => {
     return response
 });
 
-return {teamData, availableSeasons, transfers};
+return {transfers}
 }
-
 }
 
 export const squadLoader = async ({params}: any) =>{

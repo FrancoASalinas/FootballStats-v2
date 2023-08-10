@@ -14,8 +14,7 @@ import useRecentlyVisited from '../utils/useRecentlyVisited';
 import CustomSelect from '../modules/CustomSelect';
 
 function TeamLayout() {
-  const { teamData, availableSeasons, transfers }: Data =
-    useLoaderData() as any;
+  const { teamData, availableSeasons }: Data = useLoaderData() as any;
   const [favorite, setFavorite] = useState(
     dataIsFavorite(
       `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`
@@ -87,7 +86,6 @@ function TeamLayout() {
               Statistics
             </Link>
           </li>
-          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
           <li
             className={`p-2 hover:underline text-center w-full ${
               location.pathname.split('/').includes('players') &&
@@ -96,7 +94,6 @@ function TeamLayout() {
           >
             <Link to="players">Players</Link>
           </li>
-          {/* <div className="h-full w-[6px] border-l block  border-dark"></div> */}
           <li
             className={`p-2 hover:underline text-center w-full rounded-r-lg rounded-br-lg ${
               location.pathname.split('/').includes('transfers') &&
@@ -107,7 +104,7 @@ function TeamLayout() {
           </li>
         </ul>
       </nav>
-      <Outlet context={{ teamData, transfers }} />
+      <Outlet context={{ teamData }} />
     </>
   );
 }
