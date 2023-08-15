@@ -6,7 +6,6 @@ function Breadcrumbs() {
   const locationPaths = location.pathname
     .split('/')
     .filter((item) => item !== '');
-  console.log(locationPaths);
 
   function toTitleCase(str: string): string {
     return str.slice(0, 1).toUpperCase() + str.slice(1);

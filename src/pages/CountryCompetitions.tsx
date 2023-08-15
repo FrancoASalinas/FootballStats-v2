@@ -50,7 +50,7 @@ function CountryCompetitions() {
         {data.response.length > 0 &&
           data.response.map((item) => (
             <li key={item.league.id}>
-              <Link to={`${item.league.id}`}>{item.league.name}</Link>
+              <Link to={`${item.league.id}/season`}>{item.league.name}</Link>
             </li>
           ))}
       </ul>

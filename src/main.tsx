@@ -34,6 +34,9 @@ import Fixture from './pages/Fixture.tsx';
 import FixturesLayout from './pages/FixturesLayout.tsx';
 import FixtureEvents from './pages/FixtureEvents.tsx';
 import FixtureStats from './pages/FixtureStats.tsx';
+import Standings from './pages/Standings.tsx';
+import TopScorers from './pages/TopScorers.tsx';
+import TopsAssists from './pages/TopsAssists.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -56,14 +59,13 @@ const router = createBrowserRouter(
           >
             <Route
               element={<Competition />}
-              path=":compId"
-              loader={compLoader}
-            />
-            <Route
-              element={<Competition />}
               path=":compId/:compSeason"
               loader={compLoader}
-            />
+            >
+              <Route element={<Standings />} index />
+              <Route element={<TopScorers/>} path='topscorers' />
+              <Route path='topassists' element={<TopsAssists />}/>
+            </Route >
           </Route>
         </Route>
         <Route

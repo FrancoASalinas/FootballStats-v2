@@ -15,7 +15,6 @@ function Player() {
   const [favorite, setFavorite] = useState(
     dataIsFavorite('player_' + playerData.name + '_fav')
   );
-  console.log(player);
 
   useEffect(() => {
     favorite

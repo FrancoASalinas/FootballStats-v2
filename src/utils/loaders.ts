@@ -58,21 +58,31 @@ export const countryLoader = async ({ params }: any) => {
 export const compLoader = async ({ params }: any) => {
   const { compId, compSeason } = params;
 
-  if (!navigator.onLine) {
+  
+  const storeSeasons = 'availableSeasons_' + compId;
+  const storeStandings = 'seasonStandings_' + compId + (compSeason === 'season' ? '' : `&${compSeason}`);
+  const storeTopScorers = 'topScorers_' + compId + compSeason === 'season' ? '' : compSeason;
+  const storeTopAssists = 'topAssists_' + compId + compSeason === 'season' ? '' : compSeason;
+
+
+  if (!navigator.onLine || localStorage.offline) {
     if (
-      store.getItem('availableSeasons_' + compId) !== null &&
+      store.getItem(storeSeasons) !== null &&
       store.getItem(
-        'seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')
-      ) !== null
+        storeStandings
+      ) !== null &&
+      store.getItem(storeTopScorers) &&
+      store.getItem(storeTopAssists)
     ) {
-      const availableSeasons = JSON.parse(store['availableSeasons_' + compId]);
+      const availableCompSeasons = JSON.parse(store[storeSeasons]);
       const currentSeasonStandings = JSON.parse(
         store[
-          'seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')
+          storeStandings
         ]
       );
-
-      return { availableSeasons, currentSeasonStandings };
+      const topScorers = JSON.parse(store[storeTopScorers]);
+      const topAssists = JSON.parse(store[storeTopAssists]);
+      return { availableCompSeasons, currentSeasonStandings, topScorers, topAssists };
     }
     throw new Error(
       "Looks like you are offline and we couldn't save this data"
@@ -80,7 +90,7 @@ export const compLoader = async ({ params }: any) => {
   } else {
     let currentSeasonStandings: any;
 
-    const availableSeasons: any = await fetch(
+    const availableCompSeasons: any = await fetch(
       `https://v3.football.api-sports.io/leagues?id=${compId}`,
       {
         method: 'GET',
@@ -92,8 +102,8 @@ export const compLoader = async ({ params }: any) => {
     )
       .then((response) => {
         if (!response.ok) {
-          return store.getItem(availableSeasons) !== null
-            ? store.getItem('availableSeasons_' + compId)
+          return store.getItem(availableCompSeasons) !== null
+            ? store.getItem(storeSeasons)
             : new Error('Error retrieving data');
         }
 
@@ -101,27 +111,28 @@ export const compLoader = async ({ params }: any) => {
       })
       .then((response) => {
         if (Object.values(response.errors).length > 0) {
-          if (store.getItem('availableSeasons_' + compId)) {
-            return JSON.parse(store['availableSeasons_' + compId]);
+          if (store.getItem(storeSeasons)) {
+            return JSON.parse(store[storeSeasons]);
           } else {
             throw new Error(Object.values(response.errors as string)[0]);
           }
         } else {
-          store.setItem('availableSeasons_' + compId, JSON.stringify(response));
+          // throw new Error('a')
+          store.setItem(storeSeasons, JSON.stringify(response));
 
           return response;
         }
-      });
+      }).catch(error => {throw new Error(error)});
 
     currentSeasonStandings = await fetch(
       `${
-        compSeason
-          ? `https://v3.football.api-sports.io/standings?league=${compId}&season=${compSeason}`
-          : `https://v3.football.api-sports.io/standings?league=${compId}&season=${
-              availableSeasons.response[0].seasons.filter(
+        compSeason === 'season'
+          ? `https://v3.football.api-sports.io/standings?league=${compId}&season=${
+              availableCompSeasons.response[0].seasons.filter(
                 (season: { current: boolean }) => season.current === true
               )[0].year
             }`
+          : `https://v3.football.api-sports.io/standings?league=${compId}&season=${compSeason}`
       }`,
       {
         method: 'GET',
@@ -148,14 +159,14 @@ export const compLoader = async ({ params }: any) => {
         if (Object.values(response.errors).length > 0) {
           if (
             store.getItem(
-              'seasonStandings_' + compId + (compSeason ? `&${compSeason}` : '')
+              storeStandings
             )
           ) {
             return JSON.parse(
               store[
                 'seasonStandings_' +
                   compId +
-                  (compSeason ? `&${compSeason}` : '')
+                  (compSeason === 'season' ? '' : `&${compSeason}`)
               ]
             );
           } else {
@@ -163,7 +174,7 @@ export const compLoader = async ({ params }: any) => {
           }
         } else {
           store.setItem(
-            'seasonStandings_' + compId + (compSeason ? `&${compSeason}` : ''),
+            storeStandings,
             JSON.stringify(response)
           );
 
@@ -171,7 +182,115 @@ export const compLoader = async ({ params }: any) => {
         }
       });
 
-    return { availableSeasons, currentSeasonStandings };
+      const topScorers = await fetch(
+        `${
+          compSeason === 'season'
+            ? `https://v3.football.api-sports.io/players/topscorers?season=${
+                availableCompSeasons.response[0].seasons.filter(
+                  (season: { current: boolean }) => season.current === true
+                )[0].year
+              }&league=${compId}`
+            : `https://v3.football.api-sports.io/players/topscorers?season=${compSeason}&league=${compId}`
+        }`,
+        {
+          method: 'GET',
+          headers: {
+            'x-rapidapi-host': 'v3.football.api-sports.io',
+            'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+          },
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            return store.getItem(storeTopScorers) !== null
+              ? store.getItem(storeTopScorers)
+              : new Error('Error retreiving data');
+          }
+  
+          return response.json();
+        })
+        .then((response) => {
+          if (Object.values(response.errors).length > 0) {
+            if (
+              store.getItem(
+                storeTopScorers
+              )
+            ) {
+              return JSON.parse(
+                store[
+                  'seasonStandings_' +
+                    compId +
+                    (compSeason === 'season' ? '' : `&${compSeason}`)
+                ]
+              );
+            } else {
+              throw new Error(Object.values(response.errors as string)[0]);
+            }
+          } else {
+            store.setItem(
+              storeTopScorers,
+              JSON.stringify(response)
+            );
+  
+            return response;
+          }
+        });
+
+        const topAssists = await fetch(
+          `${
+            compSeason === 'season'
+              ? `https://v3.football.api-sports.io/players/topassists?season=${
+                  availableCompSeasons.response[0].seasons.filter(
+                    (season: { current: boolean }) => season.current === true
+                  )[0].year
+                }&league=${compId}`
+              : `https://v3.football.api-sports.io/players/topassists?season=${compSeason}&league=${compId}`
+          }`,
+          {
+            method: 'GET',
+            headers: {
+              'x-rapidapi-host': 'v3.football.api-sports.io',
+              'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+            },
+          }
+        )
+          .then((response) => {
+            if (!response.ok) {
+              return store.getItem(storeTopAssists) !== null
+                ? store.getItem(storeTopAssists)
+                : new Error('Error retreiving data');
+            }
+    
+            return response.json();
+          })
+          .then((response) => {
+            if (Object.values(response.errors).length > 0) {
+              if (
+                store.getItem(
+                  storeTopAssists
+                )
+              ) {
+                return JSON.parse(
+                  store[
+                    'seasonStandings_' +
+                      compId +
+                      (compSeason === 'season' ? '' : `&${compSeason}`)
+                  ]
+                );
+              } else {
+                throw new Error(Object.values(response.errors as string)[0]);
+              }
+            } else {
+              store.setItem(
+                storeTopAssists,
+                JSON.stringify(response)
+              );
+    
+              return response;
+            }
+          });
+
+    return { availableCompSeasons, currentSeasonStandings, topScorers, topAssists };
   }
 };
 

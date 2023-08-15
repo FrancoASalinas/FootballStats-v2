@@ -48,7 +48,6 @@ export default function useTeamsCountries() {
         }
       })
       .then((result) => {
-        console.log(result);
         if (Object.values(result.errors).length > 0) {
           throw new Error(Object.values(result.errors)[0] as string);
         }
