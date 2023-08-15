@@ -16,6 +16,18 @@ export interface Data {
       };
       parameters: { season: string; league: string };
     };
+    availableCompSeasons: {
+      response: [
+        {
+          league: { name: string; logo: string; id: number };
+          seasons: [];
+        }
+      ];
+    };
+    currentSeasonStandings: {
+      parameters: { season: number };
+      response: [{ league: { standings: [] } }];
+    };
     availableSeasons: {
       response: number[];
       parameters: { team: string };
@@ -99,7 +111,7 @@ export interface Data {
       ]; 
     }]
   };
-  fixtureStats: {
+  fixtureStats: { 
     results: number;
     response: [
       {
@@ -107,7 +119,45 @@ export interface Data {
         statistics: [{type: string; value: number}]
       }
     ]
+  };
+
+  topScorers: {
+    response:[
+      
+        {player: {name: string, photo: string, firstname: string; lastname:string; age: number,  height: string; weight: number; nationality: string}, statistics: [{
+          cards: {yellow: number; red: number};team: {name: string};
+           dribbles: {attempts: number | null; success: number; past: number};
+           duels: {total: number; won: number};
+           games: {appearences: number; lineups: number; minutes: number; position: string; rating: string};
+           goals: {assists: number; conceded: number; saved: number; total: number | null};
+           passes: {total: number | null; key: number; accuracy: number};
+           penalty: {commited: number; missed: number; saved: number; scored: number; won: number};
+           shots: {total: number | null; on: number};
+           tackles: {total: null | number; blocks: number; interceptions: number}
+
+}]}
+      
+    ]
   }
+  topAssists: {
+    response:[
+      
+        {player: {name: string, photo: string, firstname: string; lastname:string; age: number,  height: string; weight: number; nationality: string}, statistics: [{
+          cards: {yellow: number; red: number};team: {name: string};
+           dribbles: {attempts: number | null; success: number; past: number};
+           duels: {total: number; won: number};
+           games: {appearences: number; lineups: number; minutes: number; position: string; rating: string};
+           goals: {assists: number; conceded: number; saved: number; total: number | null};
+           passes: {total: number | null; key: number; accuracy: number};
+           penalty: {commited: number; missed: number; saved: number; scored: number; won: number};
+           shots: {total: number | null; on: number};
+           tackles: {total: null | number; blocks: number; interceptions: number}
+
+}]}
+      
+    ]
+  }
+
   }
 
   export interface Squad {
@@ -117,4 +167,19 @@ export interface Data {
         {name: string; id: number; number: number; position: string; photo: string}
       ]}]
     }
+  }
+
+  export interface Standing {
+    group: string;
+    rank: number;
+    team: {
+      id: number;
+      name: string;
+    };
+    all: {
+      played: number;
+      goals: { for: number; against: number };
+    };
+    goalsDiff: number;
+    points: number;
   }

@@ -5,7 +5,6 @@ function LiveFixtures() {
   const { liveFixtures } = useLoaderData() as Data;
   const navigate = useNavigate();
 
-  console.log(liveFixtures);
 
   return (
     <>
