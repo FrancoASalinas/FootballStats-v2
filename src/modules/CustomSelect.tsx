@@ -7,7 +7,7 @@ interface Props {
 function CustomSelect({ children, onChange, defaultValue }: Props) {
   return (
     <select
-      className="dark:text-black scroll-auto"
+      className="scroll-auto px-2 py-1 bg-light dark:bg-dark dark:text-light "
       onChange={onChange}
       defaultValue={defaultValue}
     >
