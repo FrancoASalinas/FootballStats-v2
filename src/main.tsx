@@ -37,6 +37,7 @@ import FixtureStats from './pages/FixtureStats.tsx';
 import Standings from './pages/Standings.tsx';
 import TopScorers from './pages/TopScorers.tsx';
 import TopsAssists from './pages/TopsAssists.tsx';
+import FixtureLineup from './pages/FixtureLineup.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,6 +49,7 @@ const router = createBrowserRouter(
           <Route path=":fixtureId" element={<Fixture />} loader={fixtureLoader}>
             <Route index element={<FixtureStats />} />
             <Route path="events" element={<FixtureEvents />} />
+            <Route path="lineups" element={<FixtureLineup />} />
           </Route>
         </Route>
         <Route element={<Competitions />} path="countries">

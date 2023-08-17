@@ -654,5 +654,13 @@ export const fixtureLoader = async ({params}: any) =>{
     }
     ).then(response => response.json())
 
-    return {fixtureStats, fixture};
+    const fixtureLineup = await fetch(`https://v3.football.api-sports.io/fixtures/lineups?fixture=${fixtureId}`, {"method": "GET",
+	"headers": {
+		"x-rapidapi-host": "v3.football.api-sports.io",
+		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
+	}   
+    }
+    ).then(response => response.json())
+
+    return {fixtureStats, fixture, fixtureLineup};
 }

@@ -157,6 +157,17 @@ export interface Data {
       
     ]
   }
+  fixtureLineup:{
+    response: [
+      {
+        team: {name: string};
+        formation: string;
+        startXI: [{player: {name: string; number: number; grid: string}}];
+        substitutes:[ {player: {name: string; number: number}}];
+        coach: {name:string}
+      }
+    ]
+  }
 
   }
 

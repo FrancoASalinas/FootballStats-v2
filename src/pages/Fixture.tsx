@@ -1,18 +1,21 @@
 import {
-  Link,
+  NavLink,
   Outlet,
   useLoaderData,
   useOutletContext,
 } from 'react-router-dom';
 import { Data } from '../utils/types';
+import CustomNav from '../modules/CustomNav';
 
 type DataType = {
   fixtureStats: Data['fixtureStats'];
   fixture: Data['liveFixtures'];
+  fixtureLineup: Data['fixtureLineup'];
 };
 
 function Fixture() {
-  const { fixtureStats, fixture }: DataType = useLoaderData() as DataType;
+  const { fixtureStats, fixture, fixtureLineup }: DataType =
+    useLoaderData() as DataType;
 
   const fixtureResponse = fixture.response[0];
 
@@ -28,12 +31,15 @@ function Fixture() {
           <img src={fixtureResponse.teams.away.logo} className="w-12"></img>
         </div>
       </header>
-      <nav className="w-full p-5 text-xl flex justify-between">
-        <Link to={`/fixtures/${fixture.parameters.id}`}>Stats</Link>
-        <Link to="events">Events</Link>
-      </nav>
+      <CustomNav>
+      <NavLink to={location.pathname.split('/').length === 4  ? '' : location.pathname.split('/').slice(0, 4).join('/')} end className={({isActive}) =>  `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-l-lg rounded-bl-lg h-full `} >Stats</NavLink>
+          <NavLink to='events' className={({isActive}) =>`p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full h-full `} >Events</NavLink>
+          <NavLink to='lineups' className={({isActive}) => `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-r-lg rounded-br-lg h-full `} >Lineups</NavLink>
+      </CustomNav>
       <article>
-        <Outlet context={{ fixture, fixtureStats } as DataType} />
+        <Outlet
+          context={{ fixture, fixtureStats, fixtureLineup } as DataType}
+        />
       </article>
     </>
   );
