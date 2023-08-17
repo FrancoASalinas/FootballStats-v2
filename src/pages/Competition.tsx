@@ -15,7 +15,6 @@ import CustomNav from '../modules/CustomNav';
 import { Data } from '../utils/types';
 
 
-
 function Competition() {
   const location = useLocation();
   const { availableCompSeasons, currentSeasonStandings, topScorers, topAssists }: Data =

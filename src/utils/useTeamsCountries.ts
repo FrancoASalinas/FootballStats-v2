@@ -8,8 +8,10 @@ interface Country {
 export default function useTeamsCountries() {
   const [countries, setTeamsCountries] = useState<any[]>([]);
   const [offline] = useOfflineMode();
+  const [loading, setLoading] = useState<boolean>();
 
   useEffect(() => {
+    setLoading(true);
 
     if(!navigator.onLine || offline){
       if(window.localStorage.getItem('countries') !== null){
@@ -24,8 +26,10 @@ export default function useTeamsCountries() {
             return -1;
           } else return 0;
         }))
+        setLoading(false)
       }
-      else{
+      else{                     
+        setLoading(false)
         throw new Error('Looks like you are offline and we couldn\'t save this data' )
       }
     } else{ 
@@ -48,6 +52,7 @@ export default function useTeamsCountries() {
         }
       })
       .then((result) => {
+        setLoading(false)
         if (Object.values(result.errors).length > 0) {
           throw new Error(Object.values(result.errors)[0] as string);
         }
@@ -90,6 +95,6 @@ export default function useTeamsCountries() {
 
   }, [offline]);
 
-  return  [countries, offline] as const;
+  return  [countries, loading, offline] as const;
 ;
 }

@@ -4,6 +4,7 @@ import {
   useLoaderData,
   useLocation,
   useNavigate,
+  useNavigation,
   useOutletContext,
 } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
@@ -13,6 +14,7 @@ import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import useRecentlyVisited from '../utils/useRecentlyVisited';
 import CustomSelect from '../modules/CustomSelect';
 import CustomNav from '../modules/CustomNav';
+import Spinner from '../modules/Spinner';
 
 function TeamLayout() {
   const { teamData, availableSeasons }: Data = useLoaderData() as any;
@@ -23,6 +25,7 @@ function TeamLayout() {
   );
   const [recents, setRecents] = useRecentlyVisited();
   const navigate = useNavigate();
+  const navigation = useNavigation();
   const location = useLocation();
 
   useEffect(() => {
@@ -46,7 +49,9 @@ function TeamLayout() {
     setRecents([[title, location.pathname], ...recents]);
   }, []);
 
-  return (
+  return navigation.state === 'loading' ? (
+    <Spinner />
+  ) : (
     <>
       <LayoutHeader
         name={teamData.response.team.name}

@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigation } from 'react-router-dom';
 import useTeamsCountries from '../utils/useTeamsCountries.ts';
+import Spinner from '../modules/Spinner.tsx';
 
 function Countries() {
-  const [countries] = useTeamsCountries();
+  const [countries, loading] = useTeamsCountries();
+  const navigation = useNavigation()
 
   let letter = '';
 
@@ -11,7 +13,10 @@ function Countries() {
       <article>
         <h2 className="text-3xl">Countries</h2>
         <div className="sm:grid grid-cols-2 ">
-          {countries.length > 0 &&
+          {(loading || navigation.state === 'loading') ? (
+            <Spinner />
+          ) : (
+            countries.length > 0 &&
             countries.map((country: { name: string }) => {
               if (country.name[0] === letter || !country.name[0].match(/[A-Z]/))
                 return null;
@@ -34,7 +39,8 @@ function Countries() {
                   </div>
                 );
               }
-            })}
+            })
+          )}
         </div>
       </article>
     </>

@@ -1,9 +1,10 @@
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { useLoaderData, useLocation, useNavigate, useNavigation } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
 import { Data } from '../utils/types';
 import { useEffect, useState } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import CustomSelect from '../modules/CustomSelect';
+import Spinner from '../modules/Spinner';
 
 function Player() {
   const { player, availableSeasons }: Data = useLoaderData() as any;
@@ -11,6 +12,7 @@ function Player() {
   const playerData = player.response[0].player;
   const playerStatistics = player.response[0].statistics;
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const [favorite, setFavorite] = useState(
     dataIsFavorite('player_' + playerData.name + '_fav')
@@ -27,6 +29,8 @@ function Player() {
   }, []);
 
   return (
+    navigation.state === 'loading' ?
+    <Spinner/> :
     <>
       <LayoutHeader
         name={playerData.name}

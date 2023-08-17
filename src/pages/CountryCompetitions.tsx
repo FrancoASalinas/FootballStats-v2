@@ -1,9 +1,16 @@
-import { Link, Outlet, useLoaderData, useRevalidator } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useNavigation,
+  useRevalidator,
+} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useFavoriteData, { dataIsFavorite } from '../utils/useFavoriteData';
 import { useLocation } from 'react-router-dom';
 import LayoutHeader from '../modules/LayoutHeader';
 import useOfflineMode from '../utils/useOfflineMode';
+import Spinner from '../modules/Spinner';
 
 interface Data {
   response: [
@@ -22,6 +29,7 @@ function CountryCompetitions() {
   const location = useLocation();
   const revalidator = useRevalidator();
   const [offline] = useOfflineMode();
+  const navigate = useNavigation();
 
   useEffect(() => revalidator.revalidate(), [offline]);
 
@@ -39,7 +47,10 @@ function CountryCompetitions() {
   });
 
   return (
-    <>
+    navigate.state === 'loading' ? (
+          <Spinner />
+          ) : (
+          <>
       <LayoutHeader
         name={data.response[0].country.name + ' Leagues'}
         favorite
@@ -47,7 +58,7 @@ function CountryCompetitions() {
         onClick={() => setFavorite((prev) => !prev)}
       />
       <ul className="sm:grid grid-cols-2 ">
-        {data.response.length > 0 &&
+          {data.response.length > 0 &&
           data.response.map((item) => (
             <li key={item.league.id}>
               <Link to={`${item.league.id}/season`}>{item.league.name}</Link>
@@ -55,7 +66,8 @@ function CountryCompetitions() {
           ))}
       </ul>
       <Outlet />
-    </>
+      </>
+        )
   );
 }
 

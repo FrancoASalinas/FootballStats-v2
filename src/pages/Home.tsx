@@ -1,13 +1,15 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useNavigation } from 'react-router-dom';
 import useFavoriteData from '../utils/useFavoriteData';
 import { useState, useEffect } from 'react';
 import useRecentlyVisited from '../utils/useRecentlyVisited';
+import Spinner from '../modules/Spinner';
 
 function Home() {
   const [favorites, setFavorites] = useState<string[] | []>([]);
   const [recents, setRecents] = useRecentlyVisited();
 
   const navigate = useNavigate();
+  const navigation = useNavigation()
 
   useEffect(() => {
     setFavorites(useFavoriteData('_fav', 'retrieveKey'));
@@ -19,6 +21,8 @@ function Home() {
   }, []);
 
   return (
+    navigation.state === 'loading' ?
+    <Spinner/> :
     <>
       <div className="grid grid-cols-1 sm:grid-cols-[65%_35%]">
         <article className="my-5 w-full">

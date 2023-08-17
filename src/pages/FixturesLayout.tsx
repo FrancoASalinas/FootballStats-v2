@@ -1,7 +1,12 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
+import Spinner from '../modules/Spinner';
 
 function FixturesLayout() {
-  return <Outlet />;
+  const navigation = useNavigation();
+
+  return (
+  navigation.state === 'loading' ? <Spinner/> : <Outlet />
+  );
 }
 
 export default FixturesLayout;
