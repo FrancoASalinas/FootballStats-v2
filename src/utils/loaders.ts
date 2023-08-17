@@ -117,7 +117,6 @@ export const compLoader = async ({ params }: any) => {
             throw new Error(Object.values(response.errors as string)[0]);
           }
         } else {
-          // throw new Error('a')
           store.setItem(storeSeasons, JSON.stringify(response));
 
           return response;
@@ -324,28 +323,21 @@ export const teamLoader = async ({ params }: any) => {
     )
       .then((response) => {
         if (!response.ok) {
-          return store.getItem(`team_${compId}_${teamId}_${season}`)
-            ? store.getItem(`team_${compId}_${teamId}_${season}`)
-            : new Error('Error retrieving data');
+          if(store.getItem(`team_${compId}_${teamId}_${season}`) !== null){
+            return store.getItem(`team_${compId}_${teamId}_${season}`)
+          } else {
+            throw new Error('Error retreiving data');
+          }
         }
 
         return response.json();
       })
       .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`team_${compId}_${teamId}_${season}`) !== null
-            ? store.getItem(`team_${compId}_${teamId}_${season}`)
-            : new Error('Error retreiving data');
-        }
-
-        return response.json();
-      })
-      .then((response) => {
-        if (Object.values(response.errors).length > 0) {
+        if (response.errors.length > 0) {
           if (store.getItem(`team_${compId}_${teamId}_${season}`)) {
             return JSON.parse(store[`team_${compId}_${teamId}_${season}`]);
           } else {
-            throw new Error(Object.values(response.errors as string)[0]);
+            throw new Error(response.errors[0]);
           }
         } else {
           store.setItem(
@@ -354,6 +346,8 @@ export const teamLoader = async ({ params }: any) => {
           );
           return response;
         }
+      }).catch(error => {
+        throw new Error(error)
       });
 
     const availableSeasons = await fetch(
@@ -368,27 +362,21 @@ export const teamLoader = async ({ params }: any) => {
     )
       .then((response) => {
         if (!response.ok) {
-          return store.getItem(`teamSeasons_${teamId}`)
-            ? store[`teamSeasons_${teamId}`]
-            : new Error('Error retrieving data');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`teamSeasons_${teamId}`) !== null
-            ? store.getItem(`teamSeasons_${teamId}`)
-            : new Error('Error retreiving data');
+          if(store.getItem(`teamSeasons_${teamId}`) !== null){
+            return  store.getItem(`teamSeasons_${teamId}`)
+          } else {
+            throw new Error('Error retreiving data')
+          }
         }
 
         return response.json();
       })
       .then((response) => {
-        if (Object.values(response.errors).length > 0) {
+        if (response.errors.length > 0) {
           if (store.getItem(`teamSeasons_${teamId}`)) {
             return JSON.parse(store[`teamSeasons_${teamId}`]);
           } else {
-            throw new Error(Object.values(response.errors as string)[0]);
+            throw new Error(response.errors[0]);
           }
         } else {
           store.setItem(`teamSeasons_${teamId}`, JSON.stringify(response));
@@ -480,7 +468,6 @@ export const squadLoader = async ({ params }: any) => {
         },
       }
     )
-      .then((response) => response.json())
       .then((response) => {
         if (!response.ok) {
           return store.getItem(`squad_${teamId}`) !== null
@@ -491,11 +478,11 @@ export const squadLoader = async ({ params }: any) => {
         return response.json();
       })
       .then((response) => {
-        if (Object.values(response.errors).length > 0) {
+        if (response.errors.length > 0) {
           if (store.getItem(`squad_${teamId}`)) {
             return JSON.parse(store[`squad_${teamId}`]);
           } else {
-            throw new Error(Object.values(response.errors as string)[0]);
+            throw new Error(response.errors[0]);
           }
         } else {
           store.setItem(`squad_${teamId}`, JSON.stringify(response));
@@ -543,30 +530,23 @@ export const playerLoader = async ({ params }: any) => {
           'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
         },
       }
-    )
-      .then((response) => {
+    ).then((response) => {
         if (!response.ok) {
-          return store[`playerSeasons_${playerId}`] !== null
-            ? store[`playerSeasons_${playerId}`]
-            : new Error('error retrieving data');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`playerSeasons_${playerId}`) !== null
-            ? store.getItem(`playerSeasons_${playerId}`)
-            : new Error('Error retreiving data');
+          if(store.getItem(`playerSeasons_${playerId}`) !== null){
+            store.getItem(`playerSeasons_${playerId}`)
+          } else{
+            throw new Error('Error retreiving data');
+          }
         }
 
         return response.json();
-      })
-      .then((response) => {
-        if (Object.values(response.errors).length > 0) {
+      }).then((response) => {
+        console.log(response.errors.length);
+        if (response.errors.length > 0) {
           if (store.getItem(`playerSeasons_${playerId}`)) {
             return JSON.parse(store[`playerSeasons_${playerId}`]);
           } else {
-            throw new Error(Object.values(response.errors as string)[0]);
+            throw new Error(response.errors[0]);
           }
         } else {
           store.setItem(`playerSeasons_${playerId}`, JSON.stringify(response));
@@ -574,7 +554,7 @@ export const playerLoader = async ({ params }: any) => {
         }
       })
       .catch((error) => {
-        throw new Error(error);
+        throw Error(error);
       });
 
     const player = await fetch(
@@ -591,7 +571,6 @@ export const playerLoader = async ({ params }: any) => {
         },
       }
     )
-      .then((response) => response.json())
       .then((response) => {
         if (!response.ok) {
           return store.getItem(
@@ -610,7 +589,7 @@ export const playerLoader = async ({ params }: any) => {
         return response.json();
       })
       .then((response) => {
-        if (Object.values(response.errors).length > 0) {
+        if (response.errors.length > 0) {
           if (
             store.getItem(
               season === 'season'
@@ -626,7 +605,7 @@ export const playerLoader = async ({ params }: any) => {
               ]
             );
           } else {
-            throw new Error(Object.values(response.errors as string)[0]);
+            throw new Error(response.errors[0]);
           }
         } else {
           store.setItem(
