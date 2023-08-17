@@ -1,5 +1,5 @@
 import {
-  Link,
+  NavLink,
   Outlet,
   useLoaderData,
   useLocation,
@@ -76,37 +76,10 @@ function TeamLayout() {
         </CustomSelect>
       </label>
       <CustomNav>
-        <li
-          className={`p-2 hover:underline text-center w-full rounded-l-lg rounded-bl-lg ${
-            location.pathname.split('/').length === 5 && 'bg-light text-black'
-          }`}
-        >
-          <Link
-            to={
-              location.pathname.split('/').length > 5
-                ? location.pathname.split('/').slice(0, -1).join('/')
-                : ''
-            }
-          >
-            Statistics
-          </Link>
-        </li>
-        <li
-          className={`p-2 hover:underline text-center w-full ${
-            location.pathname.split('/').includes('players') &&
-            'bg-light text-black'
-          }`}
-        >
-          <Link to="players">Players</Link>
-        </li>
-        <li
-          className={`p-2 hover:underline text-center w-full rounded-r-lg rounded-br-lg ${
-            location.pathname.split('/').includes('transfers') &&
-            'bg-light text-black'
-          }`}
-        >
-          <Link to="transfers">Transfers</Link>
-        </li>
+        <NavLink to={location.pathname.split('/').length === 5  ? '' : location.pathname.split('/').slice(0, 5).join('/')} end className={({isActive}) =>  `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-l-lg rounded-bl-lg h-full `} >Stats</NavLink>
+        <NavLink to='players' className={({isActive}) =>`p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full h-full `} >Players</NavLink>
+        <NavLink to='transfers' className={({isActive}) => `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-r-lg rounded-br-lg h-full `} >Transfers</NavLink>
+
       </CustomNav>
       <Outlet context={{ teamData }} />
     </>
