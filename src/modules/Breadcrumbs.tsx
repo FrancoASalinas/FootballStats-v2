@@ -1,25 +1,47 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useMatches } from 'react-router-dom';
+
+type Match = {
+  id: string;
+  pathname: string;
+  params: unknown;
+  data: {
+    availableCompSeasons: {
+      response: [
+        {
+          league: {
+            name: string;
+          };
+        }
+      ];
+    };
+  };
+  handle: unknown;
+}[];
 
 function Breadcrumbs() {
-  const location = useLocation();
-
-  const locationPaths = location.pathname
-    .split('/')
-    .filter((item) => item !== '');
-
-  function toTitleCase(str: string): string {
-    return str.slice(0, 1).toUpperCase() + str.slice(1);
-  }
+  const matches = useMatches();
+  const crumbs = matches
+    .filter((match: any) => Boolean(match.handle?.crumb))
+    .map((match: any) => match.handle.crumb(match.data));
 
   return (
-    <div className=" flex gap-3">
-      {locationPaths.map((path, index) => (
-        <Link to={locationPaths.slice(0, index + 1).join('/')}>
-          {toTitleCase(path)} {index + 1 !== locationPaths.length ? '/' : ''}
-        </Link>
+    <ol className="flex gap-3">
+      {crumbs.map((crumb, index) => (
+        <li key={index}>{crumb}</li>
       ))}
-    </div>
+    </ol>
   );
 }
+
+export const CustomBreadCrumbs = () => {
+  const matches = useMatches() as Match;
+  const match = matches.filter((match) => match.id === 'comp')[0];
+
+  return (
+    <Link to={`${match.pathname}`}>
+      {match.data?.availableCompSeasons.response[0].league.name}
+    </Link>
+  );
+};
 
 export default Breadcrumbs;

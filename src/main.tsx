@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {
+  Link,
   Route,
   RouterProvider,
   createBrowserRouter,
@@ -38,42 +39,85 @@ import Standings from './pages/Standings.tsx';
 import TopScorers from './pages/TopScorers.tsx';
 import TopsAssists from './pages/TopsAssists.tsx';
 import FixtureLineup from './pages/FixtureLineup.tsx';
+import { CustomBreadCrumbs } from './modules/Breadcrumbs.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route element={<App />} path="/">
+      <Route
+        element={<App />}
+        path="/"
+        handle={{ crumb: () => <Link to="/">Home</Link> }}
+      >
         <Route element={<Home />} index />
-        <Route path="fixtures" element={<FixturesLayout />}>
+        <Route
+          path="fixtures"
+          element={<FixturesLayout />}
+          handle={{ crumb: () => <Link to="/fixtures">Fixtures</Link> }}
+        >
           <Route element={<LiveFixtures />} loader={liveFixturesLoader} index />
-          <Route path=":fixtureId" element={<Fixture />} loader={fixtureLoader}>
+          <Route
+            path=":fixtureId"
+            element={<Fixture />}
+            loader={fixtureLoader}
+            handle={{
+              crumb: (data: any) => (
+                <Link to={`/fixtures/${data.fixture.response[0].fixture.id}`}>
+                  {data.fixture.response[0].team.home.name} Vs.{' '}
+                  {data.fixture.response[0].team.away.name}
+                </Link>
+              ),
+            }}
+          >
             <Route index element={<FixtureStats />} />
             <Route path="events" element={<FixtureEvents />} />
             <Route path="lineups" element={<FixtureLineup />} />
           </Route>
         </Route>
-        <Route element={<Competitions />} path="countries">
+        <Route
+          element={<Competitions />}
+          path="countries"
+          handle={{ crumb: () => <Link to="/countries">Countries</Link> }}
+        >
           <Route element={<Countries />} index />
           <Route
             element={<CountryCompetitions />}
             path=":countryName"
             loader={countryLoader}
+            handle={{
+              crumb: (data: any) => (
+                <Link to={`/countries/${data.response[0].country.name}`}>
+                  {data.response[0].country.name}
+                </Link>
+              ),
+            }}
           >
             <Route
               element={<Competition />}
               path=":compId/:compSeason"
               loader={compLoader}
+              handle={{ crumb: () => <CustomBreadCrumbs /> }}
+              id="comp"
             >
               <Route element={<Standings />} index />
-              <Route element={<TopScorers/>} path='topscorers' />
-              <Route path='topassists' element={<TopsAssists />}/>
-            </Route >
+              <Route element={<TopScorers />} path="topscorers" />
+              <Route path="topassists" element={<TopsAssists />} />
+            </Route>
           </Route>
         </Route>
         <Route
           element={<TeamLayout />}
           path="team/:compId/:teamId/:season"
           loader={teamLoader}
+          handle={{
+            crumb: (data: any) => (
+              <Link
+                to={`/team/${data.teamData.parameters.league}/${data.teamData.parameters.team}/${data.teamData.parameters.season}`}
+              >
+                {data.teamData.response.team.name}
+              </Link>
+            ),
+          }}
         >
           <Route element={<Stats />} index />
           <Route element={<Players />} path="players" loader={squadLoader} />
@@ -87,6 +131,16 @@ const router = createBrowserRouter(
           path="player/:playerId/:season"
           element={<Player />}
           loader={playerLoader}
+          handle={{
+            crumb: (data: any) => (
+              <Link
+                to={`player/${data.player.parameters.id}/${data.player.parameters.season}`}
+              >
+                {data.player.response[0].player.name}{' '}
+                {data.player.parameters.season}
+              </Link>
+            ),
+          }}
         />
       </Route>
       <Route element={<Welcome />} path="welcome" />
