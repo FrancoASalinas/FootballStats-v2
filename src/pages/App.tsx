@@ -7,7 +7,7 @@ function App() {
   const [darkTheme, setDarkTheme] = useDarkTheme();
 
   function toggleTheme() {
-    setDarkTheme((prev) => !prev);
+    setDarkTheme();
   }
 
   return (

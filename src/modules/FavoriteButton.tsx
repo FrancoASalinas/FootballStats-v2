@@ -1,3 +1,5 @@
+import useDarkTheme from '../utils/useDarkTheme';
+
 export function FavoriteButton({
   isFavorite,
   onClick,
@@ -5,6 +7,10 @@ export function FavoriteButton({
   isFavorite: boolean;
   onClick: any;
 }) {
+
+  const [darkTheme, setDarkTheme] = useDarkTheme();
+  console.log(darkTheme);
+
   return (
     <button value={isFavorite ? 'fav' : 'noFav'} onClick={onClick}>
       <svg
@@ -17,7 +23,7 @@ export function FavoriteButton({
           fill={` ${
             isFavorite
               ? '#901010'
-              : localStorage.theme === 'dark'
+              : darkTheme
               ? '#ffffff66'
               : '#00000066'
           }`}
