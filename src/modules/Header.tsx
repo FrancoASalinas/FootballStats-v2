@@ -67,6 +67,9 @@ function Header({
             </Slider>
             <span className="text-xs">{offline ? 'Offline' : 'Online'}</span>
           </li>
+          <li className='flex items-center p-3'>
+            <button className='text-sm' onClick={() => localStorage.clear()}>Clear local storage</button>
+          </li>
         </ul>
       </nav>
       <nav className="hidden sm:block">
@@ -103,6 +106,9 @@ function Header({
               <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-light duration-[.2s] rounded-full before:absolute before:h-[26px] before:w-[26px] before:left-[4px] before:bottom-[4px] peer-checked:before:bg-dark before:bg-primary before:duration-[.2s] peer-checked:before:translate-x-full before:rounded-full"></span>
             </Slider>
             <span className="text-xs">{offline ? 'Offline' : 'Online'}</span>
+          </li>
+          <li className='flex items-center p-3'>
+            <button className='text-sm' onClick={() => localStorage.clear()}>Clear local storage</button>
           </li>
         </ul>
       </nav>
