@@ -1,5 +1,67 @@
+const store = window.localStorage;
 
-const store = window.localStorage
+export const countriesLoader = async () => {
+  interface Country {
+    name: string;
+  }
+
+  if (!navigator.onLine || store.getItem('offline') !== null) {
+    if (store.getItem('countries') !== null) {
+      const offlineResponse = JSON.parse(store['countries']);
+      offlineResponse.response = offlineResponse.response
+        .filter(
+          (country: any) =>
+            localStorage.getItem(`${country.name}_comps`) !== null
+        )
+        .sort((a: Country, b: Country) => {
+          if (a.name > b.name) {
+            return +1;
+          } else if (a.name < b.name) {
+            return -1;
+          } else return 0;
+        });
+      return offlineResponse;
+    } else {
+      throw new Error(
+        "Looks like you are offline and we couldn't save this data"
+      );
+    }
+  } else {
+    const data = await fetch('https://v3.football.api-sports.io/countries', {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          if (store.getItem('countries') !== null) {
+            store.getItem('countries');
+          } else {
+            throw new Error('Error retreiving data');
+          }
+        }
+
+        return response.json();
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.errors.length > 0) {
+          if (store.getItem('countries')) {
+            return JSON.parse(store['countries']);
+          } else {
+            throw new Error(response.errors[0]);
+          }
+        } else {
+          store.setItem('countries', JSON.stringify(response));
+          return response;
+        }
+      }).catch(err => {throw new Error(err)});
+
+    return data
+  }
+};
 
 export const countryLoader = async ({ params }: any) => {
   const { countryName } = params;
@@ -58,31 +120,33 @@ export const countryLoader = async ({ params }: any) => {
 export const compLoader = async ({ params }: any) => {
   const { compId, compSeason } = params;
 
-  
   const storeSeasons = 'availableSeasons_' + compId;
-  const storeStandings = 'seasonStandings_' + compId + (compSeason === 'season' ? '' : `&${compSeason}`);
-  const storeTopScorers = 'topScorers_' + compId + compSeason === 'season' ? '' : compSeason;
-  const storeTopAssists = 'topAssists_' + compId + compSeason === 'season' ? '' : compSeason;
-
+  const storeStandings =
+    'seasonStandings_' +
+    compId +
+    (compSeason === 'season' ? '' : `&${compSeason}`);
+  const storeTopScorers =
+    'topScorers_' + compId + compSeason === 'season' ? '' : compSeason;
+  const storeTopAssists =
+    'topAssists_' + compId + compSeason === 'season' ? '' : compSeason;
 
   if (!navigator.onLine || localStorage.offline) {
     if (
       store.getItem(storeSeasons) !== null &&
-      store.getItem(
-        storeStandings
-      ) !== null &&
+      store.getItem(storeStandings) !== null &&
       store.getItem(storeTopScorers) &&
       store.getItem(storeTopAssists)
     ) {
       const availableCompSeasons = JSON.parse(store[storeSeasons]);
-      const currentSeasonStandings = JSON.parse(
-        store[
-          storeStandings
-        ]
-      );
+      const currentSeasonStandings = JSON.parse(store[storeStandings]);
       const topScorers = JSON.parse(store[storeTopScorers]);
       const topAssists = JSON.parse(store[storeTopAssists]);
-      return { availableCompSeasons, currentSeasonStandings, topScorers, topAssists };
+      return {
+        availableCompSeasons,
+        currentSeasonStandings,
+        topScorers,
+        topAssists,
+      };
     }
     throw new Error(
       "Looks like you are offline and we couldn't save this data"
@@ -121,7 +185,10 @@ export const compLoader = async ({ params }: any) => {
 
           return response;
         }
-      }).catch(error => {throw new Error(error)});
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
 
     currentSeasonStandings = await fetch(
       `${
@@ -156,11 +223,7 @@ export const compLoader = async ({ params }: any) => {
       })
       .then((response) => {
         if (Object.values(response.errors).length > 0) {
-          if (
-            store.getItem(
-              storeStandings
-            )
-          ) {
+          if (store.getItem(storeStandings)) {
             return JSON.parse(
               store[
                 'seasonStandings_' +
@@ -172,124 +235,112 @@ export const compLoader = async ({ params }: any) => {
             throw new Error(Object.values(response.errors as string)[0]);
           }
         } else {
-          store.setItem(
-            storeStandings,
-            JSON.stringify(response)
-          );
+          store.setItem(storeStandings, JSON.stringify(response));
 
           return response;
         }
       });
 
-      const topScorers = await fetch(
-        `${
-          compSeason === 'season'
-            ? `https://v3.football.api-sports.io/players/topscorers?season=${
-                availableCompSeasons.response[0].seasons.filter(
-                  (season: { current: boolean }) => season.current === true
-                )[0].year
-              }&league=${compId}`
-            : `https://v3.football.api-sports.io/players/topscorers?season=${compSeason}&league=${compId}`
-        }`,
-        {
-          method: 'GET',
-          headers: {
-            'x-rapidapi-host': 'v3.football.api-sports.io',
-            'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-          },
+    const topScorers = await fetch(
+      `${
+        compSeason === 'season'
+          ? `https://v3.football.api-sports.io/players/topscorers?season=${
+              availableCompSeasons.response[0].seasons.filter(
+                (season: { current: boolean }) => season.current === true
+              )[0].year
+            }&league=${compId}`
+          : `https://v3.football.api-sports.io/players/topscorers?season=${compSeason}&league=${compId}`
+      }`,
+      {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-host': 'v3.football.api-sports.io',
+          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          return store.getItem(storeTopScorers) !== null
+            ? store.getItem(storeTopScorers)
+            : new Error('Error retreiving data');
         }
-      )
-        .then((response) => {
-          if (!response.ok) {
-            return store.getItem(storeTopScorers) !== null
-              ? store.getItem(storeTopScorers)
-              : new Error('Error retreiving data');
-          }
-  
-          return response.json();
-        })
-        .then((response) => {
-          if (Object.values(response.errors).length > 0) {
-            if (
-              store.getItem(
-                storeTopScorers
-              )
-            ) {
-              return JSON.parse(
-                store[
-                  'seasonStandings_' +
-                    compId +
-                    (compSeason === 'season' ? '' : `&${compSeason}`)
-                ]
-              );
-            } else {
-              throw new Error(Object.values(response.errors as string)[0]);
-            }
-          } else {
-            store.setItem(
-              storeTopScorers,
-              JSON.stringify(response)
+
+        return response.json();
+      })
+      .then((response) => {
+        if (Object.values(response.errors).length > 0) {
+          if (store.getItem(storeTopScorers)) {
+            return JSON.parse(
+              store[
+                'seasonStandings_' +
+                  compId +
+                  (compSeason === 'season' ? '' : `&${compSeason}`)
+              ]
             );
-  
-            return response;
+          } else {
+            throw new Error(Object.values(response.errors as string)[0]);
           }
-        });
+        } else {
+          store.setItem(storeTopScorers, JSON.stringify(response));
 
-        const topAssists = await fetch(
-          `${
-            compSeason === 'season'
-              ? `https://v3.football.api-sports.io/players/topassists?season=${
-                  availableCompSeasons.response[0].seasons.filter(
-                    (season: { current: boolean }) => season.current === true
-                  )[0].year
-                }&league=${compId}`
-              : `https://v3.football.api-sports.io/players/topassists?season=${compSeason}&league=${compId}`
-          }`,
-          {
-            method: 'GET',
-            headers: {
-              'x-rapidapi-host': 'v3.football.api-sports.io',
-              'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-            },
+          return response;
+        }
+      });
+
+    const topAssists = await fetch(
+      `${
+        compSeason === 'season'
+          ? `https://v3.football.api-sports.io/players/topassists?season=${
+              availableCompSeasons.response[0].seasons.filter(
+                (season: { current: boolean }) => season.current === true
+              )[0].year
+            }&league=${compId}`
+          : `https://v3.football.api-sports.io/players/topassists?season=${compSeason}&league=${compId}`
+      }`,
+      {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-host': 'v3.football.api-sports.io',
+          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+        },
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          return store.getItem(storeTopAssists) !== null
+            ? store.getItem(storeTopAssists)
+            : new Error('Error retreiving data');
+        }
+
+        return response.json();
+      })
+      .then((response) => {
+        if (Object.values(response.errors).length > 0) {
+          if (store.getItem(storeTopAssists)) {
+            return JSON.parse(
+              store[
+                'seasonStandings_' +
+                  compId +
+                  (compSeason === 'season' ? '' : `&${compSeason}`)
+              ]
+            );
+          } else {
+            throw new Error(Object.values(response.errors as string)[0]);
           }
-        )
-          .then((response) => {
-            if (!response.ok) {
-              return store.getItem(storeTopAssists) !== null
-                ? store.getItem(storeTopAssists)
-                : new Error('Error retreiving data');
-            }
-    
-            return response.json();
-          })
-          .then((response) => {
-            if (Object.values(response.errors).length > 0) {
-              if (
-                store.getItem(
-                  storeTopAssists
-                )
-              ) {
-                return JSON.parse(
-                  store[
-                    'seasonStandings_' +
-                      compId +
-                      (compSeason === 'season' ? '' : `&${compSeason}`)
-                  ]
-                );
-              } else {
-                throw new Error(Object.values(response.errors as string)[0]);
-              }
-            } else {
-              store.setItem(
-                storeTopAssists,
-                JSON.stringify(response)
-              );
-    
-              return response;
-            }
-          });
+        } else {
+          store.setItem(storeTopAssists, JSON.stringify(response));
 
-    return { availableCompSeasons, currentSeasonStandings, topScorers, topAssists };
+          return response;
+        }
+      });
+
+    return {
+      availableCompSeasons,
+      currentSeasonStandings,
+      topScorers,
+      topAssists,
+    };
   }
 };
 
@@ -323,8 +374,8 @@ export const teamLoader = async ({ params }: any) => {
     )
       .then((response) => {
         if (!response.ok) {
-          if(store.getItem(`team_${compId}_${teamId}_${season}`) !== null){
-            return store.getItem(`team_${compId}_${teamId}_${season}`)
+          if (store.getItem(`team_${compId}_${teamId}_${season}`) !== null) {
+            return store.getItem(`team_${compId}_${teamId}_${season}`);
           } else {
             throw new Error('Error retreiving data');
           }
@@ -346,8 +397,9 @@ export const teamLoader = async ({ params }: any) => {
           );
           return response;
         }
-      }).catch(error => {
-        throw new Error(error)
+      })
+      .catch((error) => {
+        throw new Error(error);
       });
 
     const availableSeasons = await fetch(
@@ -362,10 +414,10 @@ export const teamLoader = async ({ params }: any) => {
     )
       .then((response) => {
         if (!response.ok) {
-          if(store.getItem(`teamSeasons_${teamId}`) !== null){
-            return  store.getItem(`teamSeasons_${teamId}`)
+          if (store.getItem(`teamSeasons_${teamId}`) !== null) {
+            return store.getItem(`teamSeasons_${teamId}`);
           } else {
-            throw new Error('Error retreiving data')
+            throw new Error('Error retreiving data');
           }
         }
 
@@ -530,17 +582,19 @@ export const playerLoader = async ({ params }: any) => {
           'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
         },
       }
-    ).then((response) => {
+    )
+      .then((response) => {
         if (!response.ok) {
-          if(store.getItem(`playerSeasons_${playerId}`) !== null){
-            store.getItem(`playerSeasons_${playerId}`)
-          } else{
+          if (store.getItem(`playerSeasons_${playerId}`) !== null) {
+            store.getItem(`playerSeasons_${playerId}`);
+          } else {
             throw new Error('Error retreiving data');
           }
         }
 
         return response.json();
-      }).then((response) => {
+      })
+      .then((response) => {
         console.log(response.errors.length);
         if (response.errors.length > 0) {
           if (store.getItem(`playerSeasons_${playerId}`)) {
@@ -622,45 +676,56 @@ export const playerLoader = async ({ params }: any) => {
   }
 };
 
-export const liveFixturesLoader = async () =>{
-
-    const liveFixtures = await fetch(`https://v3.football.api-sports.io/fixtures?live=all`, {"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
-		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
-	}   
+export const liveFixturesLoader = async () => {
+  const liveFixtures = await fetch(
+    `https://v3.football.api-sports.io/fixtures?live=all`,
+    {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+      },
     }
-    ).then(response => response.json())
+  ).then((response) => response.json());
 
-    return {liveFixtures};
-}
+  return { liveFixtures };
+};
 
-export const fixtureLoader = async ({params}: any) =>{
-    const {fixtureId} = params;
+export const fixtureLoader = async ({ params }: any) => {
+  const { fixtureId } = params;
 
-    const fixtureStats = await fetch(`https://v3.football.api-sports.io/fixtures/statistics?fixture=${fixtureId}`, {"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
-		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
-	}   
+  const fixtureStats = await fetch(
+    `https://v3.football.api-sports.io/fixtures/statistics?fixture=${fixtureId}`,
+    {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+      },
     }
-    ).then(response => response.json())
+  ).then((response) => response.json());
 
-    const fixture = await fetch(`https://v3.football.api-sports.io/fixtures?id=${fixtureId}`, {"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
-		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
-	}   
+  const fixture = await fetch(
+    `https://v3.football.api-sports.io/fixtures?id=${fixtureId}`,
+    {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+      },
     }
-    ).then(response => response.json())
+  ).then((response) => response.json());
 
-    const fixtureLineup = await fetch(`https://v3.football.api-sports.io/fixtures/lineups?fixture=${fixtureId}`, {"method": "GET",
-	"headers": {
-		"x-rapidapi-host": "v3.football.api-sports.io",
-		"x-rapidapi-key": "1a3508246c26e132ec89913136f83975"
-	}   
+  const fixtureLineup = await fetch(
+    `https://v3.football.api-sports.io/fixtures/lineups?fixture=${fixtureId}`,
+    {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': 'v3.football.api-sports.io',
+        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+      },
     }
-    ).then(response => response.json())
+  ).then((response) => response.json());
 
-    return {fixtureStats, fixture, fixtureLineup};
-}
+  return { fixtureStats, fixture, fixtureLineup };
+};

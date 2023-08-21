@@ -23,6 +23,7 @@ import {
   liveFixturesLoader,
   fixtureLoader,
   transfersLoader,
+  countriesLoader,
 } from './utils/loaders.ts';
 import Competition from './pages/Competition.tsx';
 import TeamLayout from './pages/TeamLayout.tsx';
@@ -79,7 +80,7 @@ const router = createBrowserRouter(
           path="countries"
           handle={{ crumb: () => <Link to="/countries">Countries</Link> }}
         >
-          <Route element={<Countries />} index />
+          <Route element={<Countries />} index loader={countriesLoader} />
           <Route
             element={<CountryCompetitions />}
             path=":countryName"

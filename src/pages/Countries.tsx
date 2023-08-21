@@ -1,23 +1,22 @@
-import { Link, useNavigation } from 'react-router-dom';
-import useTeamsCountries from '../utils/useTeamsCountries.ts';
+import { Link, useLoaderData, useNavigation } from 'react-router-dom';
 import Spinner from '../modules/Spinner.tsx';
 
+type Countries = {response: [{ name: string }]};
+
 function Countries() {
-  const [countries, loading] = useTeamsCountries();
-  const navigation = useNavigation()
+  const countries = useLoaderData() as Countries;
+  const navigation = useNavigation();
 
   let letter = '';
-
   return (
     <>
       <article>
         <h2 className="text-3xl">Countries</h2>
         <div className="sm:grid grid-cols-2 ">
-          {(loading || navigation.state === 'loading') ? (
+          {navigation.state === 'loading' ? (
             <Spinner />
           ) : (
-            countries.length > 0 &&
-            countries.map((country: { name: string }) => {
+            countries.response.map((country) => {
               if (country.name[0] === letter || !country.name[0].match(/[A-Z]/))
                 return null;
               else {
@@ -26,11 +25,11 @@ function Countries() {
                   <div key={letter} className="py-5 text-xl">
                     <h3 className="text-2xl">{letter}</h3>
                     <ul>
-                      {countries
-                        .filter((c: { name: string }) => {
+                      {countries.response
+                        .filter((c) => {
                           return c.name[0] === letter;
                         })
-                        .map((item: { name: string }) => (
+                        .map((item) => (
                           <li key={item.name}>
                             <Link to={`${item.name}`}>{item.name}</Link>
                           </li>
