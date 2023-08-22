@@ -2,7 +2,6 @@ import { useCompetitionContext } from "./Competition";
 
 function TopScorers() {
     const {topScorers} = useCompetitionContext();
-    console.log(topScorers)
     return (
         <table>
             <thead>

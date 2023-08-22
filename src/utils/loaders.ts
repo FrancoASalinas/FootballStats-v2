@@ -46,7 +46,6 @@ export const countriesLoader = async () => {
         return response.json();
       })
       .then((response) => {
-        console.log(response);
         if (response.errors.length > 0) {
           if (store.getItem('countries')) {
             return JSON.parse(store['countries']);
@@ -595,7 +594,6 @@ export const playerLoader = async ({ params }: any) => {
         return response.json();
       })
       .then((response) => {
-        console.log(response.errors.length);
         if (response.errors.length > 0) {
           if (store.getItem(`playerSeasons_${playerId}`)) {
             return JSON.parse(store[`playerSeasons_${playerId}`]);

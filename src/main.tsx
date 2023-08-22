@@ -41,6 +41,7 @@ import TopScorers from './pages/TopScorers.tsx';
 import TopsAssists from './pages/TopsAssists.tsx';
 import FixtureLineup from './pages/FixtureLineup.tsx';
 import { CustomBreadCrumbs } from './modules/Breadcrumbs.tsx';
+import ErrorPage from './pages/ErrorPage.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,6 +50,7 @@ const router = createBrowserRouter(
         element={<App />}
         path="/"
         handle={{ crumb: () => <Link to="/">Home</Link> }}
+        errorElement={<ErrorPage />}
       >
         <Route element={<Home />} index />
         <Route

@@ -8,8 +8,7 @@ export function FavoriteButton({
   onClick: any;
 }) {
 
-  const [darkTheme, setDarkTheme] = useDarkTheme();
-  console.log(darkTheme);
+  const [darkTheme] = useDarkTheme();
 
   return (
     <button value={isFavorite ? 'fav' : 'noFav'} onClick={onClick}>
