@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face{
+    font-family: 'Roboto';
+    src: url('/public/Roboto-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Anton';
+    src: url('/public/Anton-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
 table {
     width: 100%;
     text-align: center;
