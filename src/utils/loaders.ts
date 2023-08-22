@@ -262,11 +262,12 @@ export const compLoader = async ({ params }: any) => {
 export const teamLoader = async ({ params }: any) => {
   const { compId, teamId, season } = params;
 
+  const transfersRef = `transfers_${teamId}`;
   const team = `team_${compId}_${teamId}_${season}`;
   const teamSeasons = `teamSeasons_${teamId}`;
 
   const data = await fetchBoilerplate(
-    [team, teamSeasons],
+    [team, teamSeasons, transfersRef],
     [
       {
         url: `https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`,
@@ -276,33 +277,16 @@ export const teamLoader = async ({ params }: any) => {
         url: `https://v3.football.api-sports.io/teams/seasons?team=${teamId}`,
         reference: teamSeasons,
       },
-    ]
-  );
-
-  const teamData = data[0];
-  const availableSeasons = data[1];
-
-  return { teamData, availableSeasons };
-};
-
-export const transfersLoader = async ({ params }: any) => {
-  const { teamId } = params;
-
-  const transfer = `transfers_${teamId}`;
-
-  const data = await fetchBoilerplate(
-    [transfer],
-    [
       {
         url: `https://v3.football.api-sports.io/transfers/?team=${teamId}`,
-        reference: transfer,
-      },
+        reference: transfersRef,
+      }
     ]
   );
 
-  const transfers = data[0];
+  const [teamData, availableSeasons, transfers] = data;
 
-  return { transfers };
+  return { teamData, availableSeasons, transfers };
 };
 
 export const squadLoader = async ({ params }: any) => {

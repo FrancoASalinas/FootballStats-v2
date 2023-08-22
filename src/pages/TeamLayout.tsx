@@ -17,7 +17,7 @@ import CustomNav from '../modules/CustomNav';
 import Spinner from '../modules/Spinner';
 
 function TeamLayout() {
-  const { teamData, availableSeasons }: Data = useLoaderData() as any;
+  const { teamData, availableSeasons, transfers }: Data = useLoaderData() as any;
   const [favorite, setFavorite] = useState(
     dataIsFavorite(
       `${teamData.response.team.name}_${teamData.parameters.league}_${teamData.parameters.season}_fav`
@@ -81,7 +81,7 @@ function TeamLayout() {
         <NavLink to='transfers' className={({isActive}) => `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-r-lg rounded-br-lg h-full `} >Transfers</NavLink>
 
       </CustomNav>
-      <Outlet context={{ teamData }} />
+      <Outlet context={{ teamData, transfers }} />
     </>
   );
 }

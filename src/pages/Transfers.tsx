@@ -1,11 +1,11 @@
-import { useLoaderData } from 'react-router-dom';
 import Dropdown from '../modules/Dropdown';
 import { Data } from '../utils/types';
 import { useTeamData } from './TeamLayout';
 
 function Transfers() {
-  const { transfers }: Data = useLoaderData() as Data;
-  const { teamData }: Data = useTeamData();
+  const { teamData, transfers }: Data = useTeamData();
+
+  console.log(transfers)
 
   return (
     <>

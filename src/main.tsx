@@ -22,7 +22,6 @@ import {
   squadLoader,
   liveFixturesLoader,
   fixtureLoader,
-  transfersLoader,
   countriesLoader,
 } from './utils/loaders.ts';
 import Competition from './pages/Competition.tsx';
@@ -126,7 +125,6 @@ const router = createBrowserRouter(
           <Route element={<Players />} path="players" loader={squadLoader} />
           <Route
             element={<Transfers />}
-            loader={transfersLoader}
             path="transfers"
           />
         </Route>
