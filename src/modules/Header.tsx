@@ -84,11 +84,6 @@ function Header({
               Competitions
             </Link>
           </li>
-          <li className="p-3">
-            <Link to="live" onClick={handleNav}>
-              Live Fixtures
-            </Link>
-          </li>
           <li>
             <button className="p-3" onClick={showInstallPrompt}>
               Install the App
