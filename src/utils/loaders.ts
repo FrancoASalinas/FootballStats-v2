@@ -1,119 +1,35 @@
+import { fetchBoilerplate, simpleFetchBoilerplate } from "./boilerplates";
+
 const store = window.localStorage;
 
 export const countriesLoader = async () => {
-  interface Country {
-    name: string;
-  }
-
-  if (!navigator.onLine || store.getItem('offline') !== null) {
-    if (store.getItem('countries') !== null) {
-      const offlineResponse = JSON.parse(store['countries']);
-      offlineResponse.response = offlineResponse.response
-        .filter(
-          (country: any) =>
-            localStorage.getItem(`${country.name}_comps`) !== null
-        )
-        .sort((a: Country, b: Country) => {
-          if (a.name > b.name) {
-            return +1;
-          } else if (a.name < b.name) {
-            return -1;
-          } else return 0;
-        });
-      return offlineResponse;
-    } else {
-      throw new Error(
-        "Looks like you are offline and we couldn't save this data"
-      );
-    }
-  } else {
-    const data = await fetch('https://v3.football.api-sports.io/countries', {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
+  const data = await fetchBoilerplate(
+    ['countries'],
+    [
+      {
+        url: 'https://v3.football.api-sports.io/countries',
+        reference: 'countries',
       },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          if (store.getItem('countries') !== null) {
-            store.getItem('countries');
-          } else {
-            throw new Error('Error retreiving data');
-          }
-        }
+    ]
+  );
 
-        return response.json();
-      })
-      .then((response) => {
-        if (response.errors.length > 0) {
-          if (store.getItem('countries')) {
-            return JSON.parse(store['countries']);
-          } else {
-            throw new Error(response.errors[0]);
-          }
-        } else {
-          store.setItem('countries', JSON.stringify(response));
-          return response;
-        }
-      }).catch(err => {throw new Error(err)});
-
-    return data
-  }
+  return data[0];
 };
 
 export const countryLoader = async ({ params }: any) => {
   const { countryName } = params;
 
-  if (!navigator.onLine || store.getItem('offline') !== null) {
-    if (store.getItem(countryName + '_comps') !== null) {
-      const offlineResponse = JSON.parse(store[countryName + '_comps']);
-      offlineResponse.response = offlineResponse.response.filter(
-        (comp: any) =>
-          store.getItem(`seasonStandings_${comp.league.id}`) !== null
-      );
-
-      return offlineResponse;
-    } else {
-      throw new Error(
-        "Looks like you are offline and we couldn't save this data"
-      );
-    }
-  } else {
-    const data = await fetch(
-      `https://v3.football.api-sports.io/leagues?country=${countryName}`,
+  const data = await fetchBoilerplate(
+    [countryName + '_comps'],
+    [
       {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(countryName + '_comps') !== null
-            ? store.getItem(countryName + '_comps')
-            : new Error('Error retreiving data');
-        }
+        url: `https://v3.football.api-sports.io/leagues?country=${countryName}`,
+        reference: countryName + '_comps',
+      },
+    ]
+  );
 
-        return response.json();
-      })
-      .then((response) => {
-        if (Object.values(response.errors).length > 0) {
-          if (store.getItem(countryName + '_comps')) {
-            return JSON.parse(store[countryName + '_comps']);
-          } else {
-            throw new Error(Object.values(response.errors as string)[0]);
-          }
-        } else {
-          store.setItem(countryName + '_comps', JSON.stringify(response));
-          return response;
-        }
-      });
-
-    return data;
-  }
+  return data[0];
 };
 
 export const compLoader = async ({ params }: any) => {
@@ -346,203 +262,67 @@ export const compLoader = async ({ params }: any) => {
 export const teamLoader = async ({ params }: any) => {
   const { compId, teamId, season } = params;
 
-  if (!navigator.onLine) {
-    if (
-      store.getItem(`team_${compId}_${teamId}_${season}`) &&
-      store.getItem(`teamSeasons_${teamId}`) &&
-      store.getItem(`transfers_${teamId}`)
-    ) {
-      const teamData = JSON.parse(store[`team_${compId}_${teamId}_${season}`]);
-      const availableSeasons = JSON.parse(store[`teamSeasons_${teamId}`]);
+  const team = `team_${compId}_${teamId}_${season}`;
+  const teamSeasons = `teamSeasons_${teamId}`;
 
-      return { teamData, availableSeasons };
-    }
-    throw new Error(
-      "Looks like you are offline and we couldn't save this data"
-    );
-  } else {
-    const teamData = await fetch(
-      `https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`,
+  const data = await fetchBoilerplate(
+    [team, teamSeasons],
+    [
       {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          if (store.getItem(`team_${compId}_${teamId}_${season}`) !== null) {
-            return store.getItem(`team_${compId}_${teamId}_${season}`);
-          } else {
-            throw new Error('Error retreiving data');
-          }
-        }
-
-        return response.json();
-      })
-      .then((response) => {
-        if (response.errors.length > 0) {
-          if (store.getItem(`team_${compId}_${teamId}_${season}`)) {
-            return JSON.parse(store[`team_${compId}_${teamId}_${season}`]);
-          } else {
-            throw new Error(response.errors[0]);
-          }
-        } else {
-          store.setItem(
-            `team_${compId}_${teamId}_${season}`,
-            JSON.stringify(response)
-          );
-          return response;
-        }
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
-
-    const availableSeasons = await fetch(
-      `https://v3.football.api-sports.io/teams/seasons?team=${teamId}`,
+        url: `https://v3.football.api-sports.io/teams/statistics?league=${compId}&team=${teamId}&season=${season}`,
+        reference: team,
+      },
       {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          if (store.getItem(`teamSeasons_${teamId}`) !== null) {
-            return store.getItem(`teamSeasons_${teamId}`);
-          } else {
-            throw new Error('Error retreiving data');
-          }
-        }
+        url: `https://v3.football.api-sports.io/teams/seasons?team=${teamId}`,
+        reference: teamSeasons,
+      },
+    ]
+  );
 
-        return response.json();
-      })
-      .then((response) => {
-        if (response.errors.length > 0) {
-          if (store.getItem(`teamSeasons_${teamId}`)) {
-            return JSON.parse(store[`teamSeasons_${teamId}`]);
-          } else {
-            throw new Error(response.errors[0]);
-          }
-        } else {
-          store.setItem(`teamSeasons_${teamId}`, JSON.stringify(response));
+  const teamData = data[0];
+  const availableSeasons = data[1];
 
-          return response;
-        }
-      });
-
-    return { teamData, availableSeasons };
-  }
+  return { teamData, availableSeasons };
 };
 
 export const transfersLoader = async ({ params }: any) => {
   const { teamId } = params;
 
-  if (!navigator.onLine || store.getItem('offline') !== null) {
-    if (store.getItem(`transfers_${teamId}`)) {
-      const transfers = JSON.parse(store[`transfers_${teamId}`]);
+  const transfer = `transfers_${teamId}`;
 
-      return { transfers };
-    }
-    throw new Error(
-      "Looks like you are offline and we couldn't save this data"
-    );
-  } else {
-    const transfers = await fetch(
-      `https://v3.football.api-sports.io/transfers/?team=${teamId}`,
+  const data = await fetchBoilerplate(
+    [transfer],
+    [
       {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`transfers_${teamId}`)
-            ? store[`transfers_${teamId}`]
-            : new Error('Error retrieving data');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`transfers_${teamId}`) !== null
-            ? store.getItem(`transfers_${teamId}`)
-            : new Error('Error retreiving data');
-        }
+        url: `https://v3.football.api-sports.io/transfers/?team=${teamId}`,
+        reference: transfer,
+      },
+    ]
+  );
 
-        return response.json();
-      })
-      .then((response) => {
-        if (Object.values(response.errors).length > 0) {
-          if (store.getItem(`transfers_${teamId}`)) {
-            return JSON.parse(store[`transfers_${teamId}`]);
-          } else {
-            throw new Error(Object.values(response.errors as string)[0]);
-          }
-        } else {
-          store.setItem(`transfers_${teamId}`, JSON.stringify(response));
+  const transfers = data[0];
 
-          return response;
-        }
-      });
-
-    return { transfers };
-  }
+  return { transfers };
 };
 
 export const squadLoader = async ({ params }: any) => {
   const { teamId } = params;
 
-  if (!navigator.onLine) {
-    if (store.getItem(`squad_${teamId}`)) {
-      return store[`squad_${teamId}`];
-    }
-    throw new Error(
-      "Looks like you are offline and we couldn't save this data"
-    );
-  } else {
-    const squad = await fetch(
-      `https://v3.football.api-sports.io/players/squads?team=${teamId}`,
+  const squadRef = `squad_${teamId}`;
+
+  const data = await fetchBoilerplate(
+    [squadRef],
+    [
       {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-          'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return store.getItem(`squad_${teamId}`) !== null
-            ? store.getItem(`squad_${teamId}`)
-            : new Error('Error retreiving data');
-        }
+        url: `https://v3.football.api-sports.io/players/squads?team=${teamId}`,
+        reference: squadRef,
+      },
+    ]
+  );
 
-        return response.json();
-      })
-      .then((response) => {
-        if (response.errors.length > 0) {
-          if (store.getItem(`squad_${teamId}`)) {
-            return JSON.parse(store[`squad_${teamId}`]);
-          } else {
-            throw new Error(response.errors[0]);
-          }
-        } else {
-          store.setItem(`squad_${teamId}`, JSON.stringify(response));
-          return response;
-        }
-      });
+  const squad = data[0];
 
-    return { squad };
-  }
+  return { squad };
 };
 
 export const playerLoader = async ({ params }: any) => {
@@ -692,38 +472,11 @@ export const liveFixturesLoader = async () => {
 export const fixtureLoader = async ({ params }: any) => {
   const { fixtureId } = params;
 
-  const fixtureStats = await fetch(
-    `https://v3.football.api-sports.io/fixtures/statistics?fixture=${fixtureId}`,
-    {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-      },
-    }
-  ).then((response) => response.json());
+  const data = await simpleFetchBoilerplate([`https://v3.football.api-sports.io/fixtures/statistics?fixture=${fixtureId}`, `https://v3.football.api-sports.io/fixtures?id=${fixtureId}`, `https://v3.football.api-sports.io/fixtures/lineups?fixture=${fixtureId}`])
 
-  const fixture = await fetch(
-    `https://v3.football.api-sports.io/fixtures?id=${fixtureId}`,
-    {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-      },
-    }
-  ).then((response) => response.json());
-
-  const fixtureLineup = await fetch(
-    `https://v3.football.api-sports.io/fixtures/lineups?fixture=${fixtureId}`,
-    {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'v3.football.api-sports.io',
-        'x-rapidapi-key': '1a3508246c26e132ec89913136f83975',
-      },
-    }
-  ).then((response) => response.json());
+  const fixtureStats = data[0];
+  const fixture = data[1];
+  const fixtureLineup = data[2];
 
   return { fixtureStats, fixture, fixtureLineup };
 };
