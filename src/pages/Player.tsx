@@ -59,7 +59,7 @@ function Player() {
               }
             >
               {availableSeasons.response.map((season) => (
-                <option>{season}</option>
+                <option key={season}>{season}</option>
               ))}
             </CustomSelect>
           </label>

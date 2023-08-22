@@ -6,7 +6,7 @@ export default function FixtureLineup() {
   return (
     <>
       {fixtureLineup.response.map((team) => (
-        <div className='my-10 border border-dark dark:border-light rounded-2xl'>
+        <div className='my-10 border border-dark dark:border-light rounded-2xl' key={team.team.name}>
           <ul>
             <li className='p-5 text-xl'>
               Coach<li className='ml-2 text-base'>{team.coach.name}</li>
@@ -15,7 +15,7 @@ export default function FixtureLineup() {
               Starting XI{' '}
               <ul>
                 {team.startXI.map((player) => (
-                  <li className="flex justify-between ml-2 text-base">
+                  <li className="flex justify-between ml-2 text-base" key={player.player.name}>
                     {player.player.name}
                     {player.player.number}
                   </li>
@@ -26,7 +26,7 @@ export default function FixtureLineup() {
               Substitutes
               <ul>
                 {team.substitutes.map((player) => (
-                  <li className="flex justify-between ml-2 text-base">
+                  <li className="flex justify-between ml-2 text-base" key={player.player.name}>
                     {player.player.name}
                     {player.player.number}
                   </li>

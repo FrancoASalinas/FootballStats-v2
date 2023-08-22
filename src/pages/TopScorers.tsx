@@ -14,7 +14,7 @@ function TopScorers() {
             </thead>
             <tbody>
                 {topScorers.response.map((player, index) => 
-                   <tr>
+                   <tr key={player.player.name}>
                     <td>{index + 1}</td>
                     <td>{player.player.name}</td>
                     <td>{player.statistics[0].goals.total}</td>

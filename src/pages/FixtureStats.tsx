@@ -7,7 +7,7 @@ function FixtureStats() {
     <>
       {fixtureStats.results > 0 ? (
         fixtureStats.response.map((item) => (
-          <div className="border p-5 border-dark my-5 rounded-2xl flex flex-col gap-3">
+          <div key={item.team.id} className="border p-5 border-dark my-5 rounded-2xl flex flex-col gap-3">
             <div className="flex gap-3 text-xl mb-3 justify-between">
               <h3>{item.team.name}</h3>
               <img className="w-8" src={item.team.logo}></img>

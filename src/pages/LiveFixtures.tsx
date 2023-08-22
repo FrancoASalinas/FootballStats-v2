@@ -11,7 +11,7 @@ function LiveFixtures() {
       <h2 className="text-2xl my-3">Live Fixtures</h2>
       <ul className="divide-y divide-dark">
         {liveFixtures.response.map((fixture) => (
-          <li className="py-3 flex justify-between items-center flex-wrap">
+          <li className="py-3 flex justify-between items-center flex-wrap" key={fixture.fixture.id}>
             <span className="flex gap-3 items-center">
               <img className="w-8 " src={fixture.teams.home.logo}></img>
               <Link
