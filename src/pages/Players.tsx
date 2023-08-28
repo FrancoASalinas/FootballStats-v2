@@ -9,7 +9,7 @@ function Players() {
       {squad.response[0].players.map((player) => (
         <div key={player.id} className="rounded-xl border border-dark p-3 my-3">
           <h3>
-            <Link to={`/player/${player.id}/season`}>
+            <Link to={`/FootballStats-v2/player/${player.id}/season`}>
               {player.name} - {player.number}
             </Link>
           </h3>

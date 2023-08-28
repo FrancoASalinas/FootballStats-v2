@@ -15,13 +15,13 @@ function LiveFixtures() {
             <span className="flex gap-3 items-center">
               <img className="w-8 " src={fixture.teams.home.logo}></img>
               <Link
-                to={`/team/${fixture.league.id}/${fixture.teams.home.id}/${fixture.league.season}`}
+                to={`/FootballStats-v2/team/${fixture.league.id}/${fixture.teams.home.id}/${fixture.league.season}`}
               >
                 {fixture.teams.home.name}
               </Link>
               {fixture.goals.home} - {fixture.goals.away}{' '}
               <Link
-                to={`/team/${fixture.league.id}/${fixture.teams.away.id}/${fixture.league.season}`}
+                to={`/FootballStats-v2/team/${fixture.league.id}/${fixture.teams.away.id}/${fixture.league.season}`}
               >
                 {fixture.teams.away.name}
               </Link>{' '}

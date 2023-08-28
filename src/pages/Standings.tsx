@@ -32,7 +32,7 @@ function Standings() {
                 <td className="border border-dark">{standing.rank}</td>
                 <td className="border border-dark">
                   <Link
-                    to={`/team/${availableCompSeasons.response[0].league.id}/${standing.team.id}/${currentSeasonStandings.parameters.season}`}
+                    to={`/FootballStats-v2/team/${availableCompSeasons.response[0].league.id}/${standing.team.id}/${currentSeasonStandings.parameters.season}`}
                     className="hover:underline"
                   >
                     {standing.team.name}

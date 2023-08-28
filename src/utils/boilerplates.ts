@@ -49,7 +49,7 @@ export async function fetchBoilerplate(
       if (referencesExist) {
         return parsedReferences;
       } else {
-        throw new Response(
+        throw new Error(
           "Looks like you are offline and we couldn't save this data"
         );
       }
@@ -65,7 +65,7 @@ export async function fetchBoilerplate(
           .then((response) => {
             if (!response.ok) {
               if(localStorage.getItem(item.reference) === null){
-                throw new Response('Error retreiving data');
+                throw new Error('Error retreiving data');
               }
               else if (localStorage.getItem(item.reference) !== null) {
                 return localStorage.getItem(item.reference);
@@ -77,9 +77,9 @@ export async function fetchBoilerplate(
           .then((response) => {
             if (!Array.isArray(response.errors)) {
               if (localStorage.getItem(item.reference) !== null) {
-                return localStorage.getItem(item.reference);
+                return JSON.parse(localStorage.getItem(item.reference) as string);
               } else {
-                throw new Response(Object.values(response.errors)[0] as string);
+                throw new Error(Object.values(response.errors)[0] as string);
               }
             } else {
               localStorage.setItem(item.reference, JSON.stringify(response));
@@ -87,7 +87,7 @@ export async function fetchBoilerplate(
             }
           })
           .catch((err) => {
-            throw new Response(err);
+            throw new Error(err);
           });
   
         return data;

@@ -47,15 +47,15 @@ const router = createBrowserRouter(
     <>
       <Route
         element={<App />}
-        path="/"
-        handle={{ crumb: () => <Link to="/">Home</Link> }}
+        path="/FootballStats-v2/"
+        handle={{ crumb: () => <Link to="/FootballStats-v2/">Home</Link> }}
         errorElement={<ErrorPage />}
       >
         <Route element={<Home />} index />
         <Route
           path="fixtures"
           element={<FixturesLayout />}
-          handle={{ crumb: () => <Link to="/fixtures">Fixtures</Link> }}
+          handle={{ crumb: () => <Link to="/FootballStats-v2/fixtures">Fixtures</Link> }}
         >
           <Route element={<LiveFixtures />} loader={liveFixturesLoader} index />
           <Route
@@ -63,12 +63,12 @@ const router = createBrowserRouter(
             element={<Fixture />}
             loader={fixtureLoader}
             handle={{
-              crumb: (data: any) => (
-                <Link to={`/fixtures/${data.fixture.response[0].fixture.id}`}>
-                  {data.fixture.response[0].team.home.name} Vs.{' '}
-                  {data.fixture.response[0].team.away.name}
+              crumb: (data: any) => 
+                <Link to={`/FootballStats-v2/fixtures/${data.fixture.response[0].fixture.id}`}>
+                  {data.fixture.response[0].teams.home.name} Vs.{' '}
+                  {data.fixture.response[0].teams.away.name}
                 </Link>
-              ),
+              ,
             }}
           >
             <Route index element={<FixtureStats />} />
@@ -79,7 +79,7 @@ const router = createBrowserRouter(
         <Route
           element={<Competitions />}
           path="countries"
-          handle={{ crumb: () => <Link to="/countries">Countries</Link> }}
+          handle={{ crumb: () => <Link to="/FootballStats-v2/countries">Countries</Link> }}
         >
           <Route element={<Countries />} index loader={countriesLoader} />
           <Route
@@ -88,7 +88,7 @@ const router = createBrowserRouter(
             loader={countryLoader}
             handle={{
               crumb: (data: any) => (
-                <Link to={`/countries/${data.response[0].country.name}`}>
+                <Link to={`/FootballStats-v2/countries/${data.response[0].country.name}`}>
                   {data.response[0].country.name}
                 </Link>
               ),
@@ -114,7 +114,7 @@ const router = createBrowserRouter(
           handle={{
             crumb: (data: any) => (
               <Link
-                to={`/team/${data.teamData.parameters.league}/${data.teamData.parameters.team}/${data.teamData.parameters.season}`}
+                to={`/FootballStats-v2/team/${data.teamData.parameters.league}/${data.teamData.parameters.team}/${data.teamData.parameters.season}`}
               >
                 {data.teamData.response.team.name}
               </Link>
@@ -135,7 +135,7 @@ const router = createBrowserRouter(
           handle={{
             crumb: (data: any) => (
               <Link
-                to={`player/${data.player.parameters.id}/${data.player.parameters.season}`}
+                to={`/FootballStats-v2/player/${data.player.parameters.id}/${data.player.parameters.season}`}
               >
                 {data.player.response[0].player.name}{' '}
                 {data.player.parameters.season}
@@ -144,7 +144,7 @@ const router = createBrowserRouter(
           }}
         />
       </Route>
-      <Route element={<Welcome />} path="welcome" />
+      <Route element={<Welcome />} path="/FootballStats-v2/welcome" />
     </>
   )
 );

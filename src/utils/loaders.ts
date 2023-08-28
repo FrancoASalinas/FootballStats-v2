@@ -49,8 +49,8 @@ export const compLoader = async ({ params }: any) => {
     if (
       store.getItem(storeSeasons) !== null &&
       store.getItem(storeStandings) !== null &&
-      store.getItem(storeTopScorers) &&
-      store.getItem(storeTopAssists)
+      store.getItem(storeTopScorers) !== null &&
+      store.getItem(storeTopAssists) !== null
     ) {
       const availableCompSeasons = JSON.parse(store[storeSeasons]);
       const currentSeasonStandings = JSON.parse(store[storeStandings]);
@@ -126,11 +126,7 @@ export const compLoader = async ({ params }: any) => {
       .then((response) => {
         if (!response.ok) {
           return store.getItem(currentSeasonStandings) !== null
-            ? store.getItem(
-                'seasonStandings_' +
-                  compId +
-                  (compSeason ? `&${compSeason}` : '')
-              )
+            ? store.getItem(storeStandings)
             : new Error('Error retreiving data');
         }
 
@@ -141,9 +137,7 @@ export const compLoader = async ({ params }: any) => {
           if (store.getItem(storeStandings)) {
             return JSON.parse(
               store[
-                'seasonStandings_' +
-                  compId +
-                  (compSeason === 'season' ? '' : `&${compSeason}`)
+                storeStandings
               ]
             );
           } else {
@@ -188,9 +182,7 @@ export const compLoader = async ({ params }: any) => {
           if (store.getItem(storeTopScorers)) {
             return JSON.parse(
               store[
-                'seasonStandings_' +
-                  compId +
-                  (compSeason === 'season' ? '' : `&${compSeason}`)
+                storeTopScorers
               ]
             );
           } else {
@@ -235,9 +227,7 @@ export const compLoader = async ({ params }: any) => {
           if (store.getItem(storeTopAssists)) {
             return JSON.parse(
               store[
-                'seasonStandings_' +
-                  compId +
-                  (compSeason === 'season' ? '' : `&${compSeason}`)
+                storeTopAssists
               ]
             );
           } else {

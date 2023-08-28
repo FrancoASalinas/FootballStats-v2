@@ -16,7 +16,7 @@ function Home() {
 
     if (localStorage.getItem('welcome') === null) {
       localStorage.welcome = '';
-      navigate('/welcome');
+      navigate('/FootballStats-v2/welcome');
     }
   }, []);
 

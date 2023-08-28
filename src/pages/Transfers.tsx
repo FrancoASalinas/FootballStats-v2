@@ -5,8 +5,6 @@ import { useTeamData } from './TeamLayout';
 function Transfers() {
   const { teamData, transfers }: Data = useTeamData();
 
-  console.log(transfers)
-
   return (
     <>
       {transfers.response

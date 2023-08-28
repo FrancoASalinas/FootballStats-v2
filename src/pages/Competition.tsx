@@ -67,7 +67,7 @@ function Competition() {
         onClick={() => setFavorite((prev) => !prev)}
       />
       <CustomNav>
-          <NavLink to={location.pathname.split('/').length === 5  ? '' : location.pathname.split('/').slice(0, 5).join('/')} end className={({isActive}) =>  `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-l-lg rounded-bl-lg h-full `} >Standings</NavLink>
+          <NavLink to={location.pathname.split('/').length === 6  ? '' : location.pathname.split('/').slice(0, 6).join('/')} end className={({isActive}) =>  `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-l-lg rounded-bl-lg h-full `} >Standings</NavLink>
           <NavLink to='topscorers' className={({isActive}) =>`p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full h-full `} >Top Scorers</NavLink>
           <NavLink to='topassists' className={({isActive}) => `p-2 text-sm ${isActive ? 'bg-light text-black' : ''} hover:underline text-center w-full rounded-r-lg rounded-br-lg h-full `} >Top Assists</NavLink>
       </CustomNav>

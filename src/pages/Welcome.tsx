@@ -24,7 +24,7 @@ function Welcome() {
         </button>
         <span>Or</span>
         <button className="border-black border rounded-lg p-2 flex gap-3 items-center">
-          <Link to="/">Get Started</Link>{' '}
+          <Link to="/FootballStats-v2/">Get Started</Link>{' '}
           <Arrow />
         </button>
       </div>
